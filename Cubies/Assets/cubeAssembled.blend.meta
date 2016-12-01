@@ -24,6 +24,19 @@ ModelImporter:
     100032: Cylinder_009
     100034: Cylinder_010
     100036: Cylinder_011
+    100038: Cylinder_012
+    100040: Cylinder_013
+    100042: Cylinder_014
+    100044: Cylinder_015
+    100046: Cylinder_016
+    100048: Cylinder_017
+    100050: Cylinder_018
+    100052: Cylinder_019
+    100054: Cylinder_020
+    100056: Cylinder_021
+    100058: Cylinder_022
+    100060: Cylinder_023
+    100062: Cylinder_024
     400000: Cube
     400002: Cube_001
     400004: Cube_002
@@ -43,6 +56,19 @@ ModelImporter:
     400032: Cylinder_009
     400034: Cylinder_010
     400036: Cylinder_011
+    400038: Cylinder_012
+    400040: Cylinder_013
+    400042: Cylinder_014
+    400044: Cylinder_015
+    400046: Cylinder_016
+    400048: Cylinder_017
+    400050: Cylinder_018
+    400052: Cylinder_019
+    400054: Cylinder_020
+    400056: Cylinder_021
+    400058: Cylinder_022
+    400060: Cylinder_023
+    400062: Cylinder_024
     2300000: Cube
     2300002: Cube_001
     2300004: Cube_002
@@ -61,6 +87,19 @@ ModelImporter:
     2300030: Cylinder_009
     2300032: Cylinder_010
     2300034: Cylinder_011
+    2300036: Cylinder_012
+    2300038: Cylinder_013
+    2300040: Cylinder_014
+    2300042: Cylinder_015
+    2300044: Cylinder_016
+    2300046: Cylinder_017
+    2300048: Cylinder_018
+    2300050: Cylinder_019
+    2300052: Cylinder_020
+    2300054: Cylinder_021
+    2300056: Cylinder_022
+    2300058: Cylinder_023
+    2300060: Cylinder_024
     3300000: Cube
     3300002: Cube_001
     3300004: Cube_002
@@ -79,6 +118,19 @@ ModelImporter:
     3300030: Cylinder_009
     3300032: Cylinder_010
     3300034: Cylinder_011
+    3300036: Cylinder_012
+    3300038: Cylinder_013
+    3300040: Cylinder_014
+    3300042: Cylinder_015
+    3300044: Cylinder_016
+    3300046: Cylinder_017
+    3300048: Cylinder_018
+    3300050: Cylinder_019
+    3300052: Cylinder_020
+    3300054: Cylinder_021
+    3300056: Cylinder_022
+    3300058: Cylinder_023
+    3300060: Cylinder_024
     4300000: Cylinder_011
     4300002: Cylinder_010
     4300004: Cylinder_009
@@ -97,6 +149,19 @@ ModelImporter:
     4300030: Cylinder_001
     4300032: Cylinder
     4300034: Cube
+    4300036: Cylinder_024
+    4300038: Cylinder_023
+    4300040: Cylinder_022
+    4300042: Cylinder_021
+    4300044: Cylinder_020
+    4300046: Cylinder_019
+    4300048: Cylinder_018
+    4300050: Cylinder_017
+    4300052: Cylinder_016
+    4300054: Cylinder_015
+    4300056: Cylinder_014
+    4300058: Cylinder_013
+    4300060: Cylinder_012
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -145,6 +210,7 @@ ModelImporter:
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
+    serializedVersion: 2
     human: []
     skeleton: []
     armTwist: 0.5
@@ -155,7 +221,10 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
   humanoidOversampling: 1
