@@ -18,6 +18,7 @@ public class MonoCube : MonoBehaviour
     private static GameObject cubePrefab;
     private static Dictionary<Vector3, MonoCube> vect2Cube = new Dictionary<Vector3, MonoCube>();
     private static Vector3 NewCubeLoca = Vector3.zero;
+    private const float OFFSET = 2.25f;
 
 
     public static Queue<MonoCube> CubesToRender = new Queue<MonoCube>();
@@ -26,81 +27,113 @@ public class MonoCube : MonoBehaviour
     public Vector3 CubePosition { get { return position; } }
     public static GameObject CubePref { set { cubePrefab = value;  } get { return cubePrefab; } }
     public static Transform ParentSpace { set { parentSpace = value; } }
+    public Dictionary<string, bool> IsFaceRotating = new Dictionary<string, bool>();
 
     public MonoCube(Vector3 pos)
     {
         cube = Instantiate(MonoCube.cubePrefab, pos, Quaternion.identity, parentSpace);
         position = pos;
         MonoCube.vect2Cube.Add(position, this);
-        //MonoCube.CubesToRender.Enqueue(this);
+        //MonoCube.CubesToRender.Enqueue(this); cubes automatically render now so this is unnecessary
 
-        front = new CubeFace(cube.transform.Find("ForeFace"));
-        back = new CubeFace(cube.transform.Find("BackFace"));
-        left = new CubeFace(cube.transform.Find("LeftFace"));
-        right = new CubeFace(cube.transform.Find("RightFace"));
-        top = new CubeFace(cube.transform.Find("TopFace"));
-        bottom = new CubeFace(cube.transform.Find("BottomFace"));
+        front = new CubeFace(cube.transform.Find("FrontFace"), "FrontFace");
+        IsFaceRotating.Add("FrontFace", false);
+
+        back = new CubeFace(cube.transform.Find("BackFace"), "BackFace");
+        IsFaceRotating.Add("BackFace", false);
+
+        left = new CubeFace(cube.transform.Find("LeftFace"), "LeftFace");
+        IsFaceRotating.Add("LeftFace", false);
+
+        right = new CubeFace(cube.transform.Find("RightFace"), "RightFace");
+        IsFaceRotating.Add("RightFace", false);
+
+        top = new CubeFace(cube.transform.Find("TopFace"), "TopFace");
+        IsFaceRotating.Add("TopFace", false);
+
+        bottom = new CubeFace(cube.transform.Find("BottomFace"), "BottomFace");
+        IsFaceRotating.Add("BottomFace", false);
     }
 
-    public void RotateFaceByHinge(string faceName, string hinge)
+    public string StartRotateFaceByHinge(string faceName, string hinge)
     {
-        CubeFace face = PickFace(faceName);
+        if (IsFaceRotating.ContainsKey(faceName))
+        {
+            if(!PickFace(faceName).Rotated)
+            {
+                bool inRotate = false;
+                IsFaceRotating.TryGetValue(faceName, out inRotate);
+                if (!inRotate)
+                {
+                    CubeFace face = PickFace(faceName);
 
-        face.Rotate(hinge);
+                    face.InitializeRotate(hinge);
+
+                    IsFaceRotating[faceName] = true;
+                }
+            }
+        }
+        else
+        {
+            return "INCORRECT_KEY";
+        }
+        return "IN_PROGRESS";
     }
 
-    public void ParentFacesToHinge(string [] faces, string baseFace, string hinge)
-    {}
+    public void ContinueRotate()
+    {
+        List<string> keys = new List<string>(IsFaceRotating.Keys);
+        foreach (string k in keys)
+        {
+            bool inRotate;
+            IsFaceRotating.TryGetValue(k, out inRotate);
+            if (inRotate)
+            {
+                CubeFace face = PickFace(k);
+
+                if(string.Compare(face.Rotate(), "SUCCESS") == 0)
+                {
+                    IsFaceRotating[k] = false;
+                }
+            }
+        }
+    }
 
     public CubeFace PickFace(string faceName)
     {
-        switch(faceName)
+        switch (faceName)
         {
-            case "Front":
-            case "FRONT":
-            case "front": return front;
-
-            case "Back":
-            case "BACK":
-            case "back": return back;
-
-            case "Left":
-            case "LEFT":
-            case "left": return left;
-
-            case "Right":
-            case "RIGHT":
-            case "right": return right;
-
-            case "Top":
-            case "TOP":
-            case "top": return top;
-
-            case "Bottom":
-            case "BOTTOM":
-            case "bottom": return bottom;
+            case "FrontFace": return front;
+            case "BackFace": return back;
+            case "LeftFace": return left;
+            case "RightFace": return right;
+            case "TopFace": return top;
+            case "BottomFace": return bottom;
 
             default: return null;
         }
     }
 
-    public static void CreateNewBoxInDirection(string direction)
+    public static MonoCube CreateNewBoxInDirection(string direction)
     {
         //Instantiate a cube from a cube prefab and add it to the dictionary of cubes with their position as their key
         Vector3 point = directionToPoint(direction);
         NewCubeLoca = NewCubeLoca + point;
         MonoCube box = new MonoCube(NewCubeLoca);
+
+        return box;
     }
 
-    public static void CreateNewBoxAtPos(Vector3 position)
+    public static MonoCube CreateNewBoxAtPos(Vector3 position)
     {
-        NewCubeLoca = position;
+        NewCubeLoca = position * OFFSET;
         MonoCube box = new MonoCube(NewCubeLoca);
+
+        return box;
     }
 
     private static Vector3 directionToPoint(string dir)
     {
-        const float OFFSET = 2.25f;
         switch(dir)
         {
             case "FORWARD":
