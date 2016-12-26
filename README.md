@@ -1,19 +1,21 @@
-Polycubes - Changelog/Chronicle
+<h1> Polycubes - Changelog/Chronicle </h1>
 
-12/26/2016
-First, a note: this should've been started ages ago. Now I will hastily list out everything in the project up until now. 
+<h3>12/26/2016</h3>
+<p>First, a note: this should've been started ages ago. Now I will hastily list out everything in the project up until now.
 
-I will try to organize everything in these categories: SCENES, SCRIPTS, MISC.
+<br>I will try to organize everything in these categories: SCENES, SCRIPTS, MISC.
 
-NOTE: IF YOU WANT TO JUST MESS WITH THE SCRIPT AND LOOK AT THE PRETTY ANIMATIONS OF CUBES UNFOLDING SCROLL DOWN TO THE END OF THE SCRIPTS SECTION TO SEE THE LIST OF VALID KEY WORDS
+<br>NOTE: IF YOU WANT TO JUST MESS WITH THE SCRIPT AND LOOK AT THE PRETTY ANIMATIONS OF CUBES UNFOLDING SCROLL DOWN TO THE END OF THE SCRIPTS SECTION TO SEE THE LIST OF VALID KEY WORDS
+</p>
 
-
-SCENES:
--Two scenes. 
+<h2>SCENES:</h2>
+<h4>Two scenes.</h4> 
+<p>	
 	"_scene" simply generates a few cubes.
-	"hardcoded_unfolding" shows a couple of cubes getting partially unfolded. There isn't much spectacle here. The unfolding itself is data-driven, but the commands for the unfolding are baked into the script and can only be changed in an editor.
+	<br>"hardcoded_unfolding" shows a couple of cubes getting partially unfolded. There isn't much spectacle here. The unfolding itself is data-driven, but the commands for the unfolding are baked into the script and can only be changed in an editor.
 
-	There is no GUI for making unfolding commands, so it is necessary to directly manipulate the script. I'll explain now in the SCRIPT section.
+	<br>There is no GUI for making unfolding commands, so it is necessary to directly manipulate the script. I'll explain how in the SCRIPT section.
+	</p>
 
 -The System Game Object
 	Acts as the manager for all of the polycube-based shenanigans. You can see that this game object holds all the scripts and objects necessary to get our project working.
