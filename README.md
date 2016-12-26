@@ -5,11 +5,9 @@ First, a note: this should've been started ages ago. Now I will hastily list out
 
 I will try to organize everything in these categories: SCENES, SCRIPTS, MISC.
 
-[[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]]
 NOTE: IF YOU WANT TO JUST MESS WITH THE SCRIPT AND LOOK AT THE PRETTY ANIMATIONS OF CUBES UNFOLDING SCROLL DOWN TO THE END OF THE SCRIPTS SECTION TO SEE THE LIST OF VALID KEY WORDS
-[[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]][[!]]
 
-[SCENES][SCENES]
+
 SCENES:
 -Two scenes. 
 	"_scene" simply generates a few cubes.
@@ -23,8 +21,7 @@ SCENES:
 
 -The Assembled Cube Prefab Object
 	Pretty self-explanatory. It's just a cube I slapped together on Blender out of cylinders and rectangular prisms. Each hinge and face is its own game object (probably eats up quite a bit of disk space), making it quite easy to manipulate.
-[SCENES][SCENES]
-[SCRIPTS][SCRIPTS]
+
 SCRIPTS:
 It's all in C#!
 
@@ -50,10 +47,9 @@ It's all in C#!
 	-Hinges: "Top", "Bottom", "Left", "Right"
 
 	If it doesn't work, then you more than likely typed in an invalid keyword somewhere (and if you're certain you have, then please email me (unless it's me who found it (fix it yourself then -me))).
-[SCRIPTS][SCRIPTS]
-[MISC.][MISC.]
+
 MISC:
 	Not much to talk about here. There are a few blender objects that are obviously being used to create the prefab for the cube.
-[MISC.][MISC.]
+
 
 And that's it. This is the state of the project thus far, and hopefully I remember to update this file as I go along.
