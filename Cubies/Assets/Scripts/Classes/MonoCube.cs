@@ -18,7 +18,7 @@ public class MonoCube : MonoBehaviour
     private static GameObject cubePrefab;
     private static Dictionary<Vector3, MonoCube> vect2Cube = new Dictionary<Vector3, MonoCube>();
     private static Vector3 NewCubeLoca = Vector3.zero;
-    private const float OFFSET = 2.25f;
+    private const float OFFSET = 2f;
 
 
     public static Queue<MonoCube> CubesToRender = new Queue<MonoCube>();
@@ -28,6 +28,7 @@ public class MonoCube : MonoBehaviour
     public static GameObject CubePref { set { cubePrefab = value;  } get { return cubePrefab; } }
     public static Transform ParentSpace { set { parentSpace = value; } }
     public Dictionary<string, bool> IsFaceRotating = new Dictionary<string, bool>();
+    public List<CubeFace> Faces = new List<CubeFace>();
 
     public MonoCube(Vector3 pos)
     {
@@ -36,30 +37,45 @@ public class MonoCube : MonoBehaviour
         MonoCube.vect2Cube.Add(position, this);
         //MonoCube.CubesToRender.Enqueue(this); cubes automatically render now so this is unnecessary
 
-        front = new CubeFace(cube.transform.Find("FrontFace"), "FrontFace");
+        front = new CubeFace(cube.transform.Find("FrontFace"), "FrontFace", this);
+        Faces.Add(front);
         IsFaceRotating.Add("FrontFace", false);
 
-        back = new CubeFace(cube.transform.Find("BackFace"), "BackFace");
+        back = new CubeFace(cube.transform.Find("BackFace"), "BackFace", this);
+        Faces.Add(back);
         IsFaceRotating.Add("BackFace", false);
 
-        left = new CubeFace(cube.transform.Find("LeftFace"), "LeftFace");
+        left = new CubeFace(cube.transform.Find("LeftFace"), "LeftFace", this);
+        Faces.Add(left);
         IsFaceRotating.Add("LeftFace", false);
 
-        right = new CubeFace(cube.transform.Find("RightFace"), "RightFace");
+        right = new CubeFace(cube.transform.Find("RightFace"), "RightFace", this);
+        Faces.Add(right);
         IsFaceRotating.Add("RightFace", false);
 
-        top = new CubeFace(cube.transform.Find("TopFace"), "TopFace");
+        top = new CubeFace(cube.transform.Find("TopFace"), "TopFace", this);
+        Faces.Add(top);
         IsFaceRotating.Add("TopFace", false);
 
-        bottom = new CubeFace(cube.transform.Find("BottomFace"), "BottomFace");
+        bottom = new CubeFace(cube.transform.Find("BottomFace"), "BottomFace", this);
+        Faces.Add(bottom);
         IsFaceRotating.Add("BottomFace", false);
+    }
+
+    public void ReparentFaceFromAnotherCube(MonoCube sourceCube, string sourceCubeFace, string thisCubeFace)
+    {
+        //Find the face from the source cube
+        CubeFace scFace = sourceCube.PickFace(sourceCubeFace);
+
+        CubeFace tFace = PickFace(thisCubeFace);
+        tFace.AdjacentFaces.Add(scFace);
     }
 
     public string StartRotateFaceByHinge(string faceName, string hinge)
     {
         if (IsFaceRotating.ContainsKey(faceName))
         {
-            if(!PickFace(faceName).Rotated)
+            if(!PickFace(faceName).IsLocked)
             {
                 bool inRotate = false;
                 IsFaceRotating.TryGetValue(faceName, out inRotate);
@@ -67,7 +83,7 @@ public class MonoCube : MonoBehaviour
                 {
                     CubeFace face = PickFace(faceName);
 
-                    face.InitializeRotate(hinge);
+                    face.InitializeDirectRotate(hinge);
 
                     IsFaceRotating[faceName] = true;
                 }
@@ -91,7 +107,7 @@ public class MonoCube : MonoBehaviour
             {
                 CubeFace face = PickFace(k);
 
-                if(string.Compare(face.Rotate(), "SUCCESS") == 0)
+                if(string.Compare(face.DirectRotate(), "SUCCESS") == 0)
                 {
                     IsFaceRotating[k] = false;
                 }

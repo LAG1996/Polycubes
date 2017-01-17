@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/hardcoded_unfolding.unity
+- path: Assets/Scenes/grouping_sides.unity
   isLoaded: 1
   isActive: 1

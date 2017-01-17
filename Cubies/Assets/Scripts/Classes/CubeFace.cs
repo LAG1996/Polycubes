@@ -4,43 +4,49 @@ using UnityEngine;
 
 public class CubeFace : MonoBehaviour
 {
-    private Transform body;
-    private Vector3 normalDir;
-    private string _name;
+    private Transform face;
+    private Transform body; //The actual face, represented by a rectangular prism
+    private Vector3 normalDir; //Why is this here?
+    private string _name; //The name of the face (TopFace, BottomFace, etc.)
     private Transform _jointToRotateAround;
     private Vector3 _rotation;
     private Vector3 MAX_ROT = new Vector3(0.0f, 0.0f, 90.0f);
-    private bool rotated;
+    private MonoCube _originalCube;
 
     private Transform [] hinges = new Transform[5];
+    private bool isLocked; //Sets whether this face could be directly manipulated or is "locked" (i.e., is not supposed to be visible or has already been directly manipulated)
 
     public Dictionary<Transform, string> HingeLookUpTransToWord = new Dictionary<Transform, string>();
+    public List<CubeFace> AdjacentFaces = new List<CubeFace>();
     
     public static float rot_speed;
 
-    public bool Rotated { get { return rotated; } }
+    public bool IsLocked { get { return isLocked; } }
+    public Transform Object { get { return face; } }
 
-    public CubeFace(Transform f, string n)
+    public CubeFace(Transform f, string n, MonoCube origin)
     {
         _name = n;
-
+        _originalCube = origin;
         body = f.Find("Body");
 
         hinges[0] = f.Find("TopHinge");
         hinges[1] = f.Find("BottomHinge");
         hinges[2] = f.Find("RightHinge");
         hinges[3] = f.Find("LeftHinge");
+
+        face = f;
         
         HingeLookUpTransToWord.Add(hinges[0], "Top");
         HingeLookUpTransToWord.Add(hinges[1], "Bottom");
         HingeLookUpTransToWord.Add(hinges[2], "Right");
         HingeLookUpTransToWord.Add(hinges[3], "Left");
 
-        rotated = false;
+        isLocked = false;
         _jointToRotateAround = null;
     }
 
-    public void InitializeRotate(string orient)
+    public void InitializeDirectRotate(string orient)
     {
         Debug.Log("Preparing " + _name);
         Transform joint = PickHinge(orient);
@@ -60,21 +66,26 @@ public class CubeFace : MonoBehaviour
                 }
             }
 
+            foreach(CubeFace f in AdjacentFaces)
+            {
+                f.face.SetParent(joint);
+            }
+
             body.SetParent(joint);
         }
     }
 
-    public string Rotate()
+    public string DirectRotate()
     {
         if (_jointToRotateAround == null)
         {
             return "FAILURE";
         }
 
-        rotated = true;
+        isLocked = true;
 
         _jointToRotateAround.Rotate(0.0f, 0.0f, CubeFace.rot_speed);
-        if(_name == "Topface" || _name == "BottomFace")
+        if(_name == "TopFace" || _name == "BottomFace")
         {
             if (Mathf.Abs(_jointToRotateAround.localEulerAngles.z) >= 90.0f)
             {
@@ -83,8 +94,6 @@ public class CubeFace : MonoBehaviour
         }
         else
         {
-            Debug.Log(_jointToRotateAround.localEulerAngles.y);
-
             if (_jointToRotateAround.name == "RightHinge")
             {
                 if (Mathf.Abs(_jointToRotateAround.localEulerAngles.y) <= 270.0f)
@@ -123,5 +132,11 @@ public class CubeFace : MonoBehaviour
 
             default:  return hinges[4];
         }
+    }
+
+    public void HideFace()
+    {
+        face.gameObject.SetActive(false);
+        isLocked = true;
     }
 }
