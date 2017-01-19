@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/grouping_sides.unity
+- path: Assets/Scenes/polycube.unity
   isLoaded: 1
   isActive: 1

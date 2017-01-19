@@ -75,10 +75,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Classes\CubeFace.cs" />
-    <Compile Include="Assets\Scripts\Classes\MonoCube.cs" />
-    <Compile Include="Assets\Scripts\System\GenerateCube.cs" />
-    <Compile Include="Assets\Scripts\System\HardUnfoldCube.cs" />
+    <Compile Include="Assets\Scripts\CUBESv0_1\Classes\FaceInfo.cs" />
+    <Compile Include="Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs" />
+    <Compile Include="Assets\Scripts\CUBESv0_1\TestScript.cs" />
+    <Compile Include="Assets\Scripts\CUBESv0_1\TestSystemScript.cs" />
+    <Compile Include="Assets\Scripts\CubeFace.cs" />
+    <Compile Include="Assets\Scripts\MonoCube.cs" />
+    <Compile Include="Assets\Scripts\System\TestScripts\GenerateCube.cs" />
+    <Compile Include="Assets\Scripts\System\TestScripts\Grouping_sides.cs" />
+    <Compile Include="Assets\Scripts\System\TestScripts\HardUnfoldCube.cs" />
     <Compile Include="Assets\SystemConstants.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

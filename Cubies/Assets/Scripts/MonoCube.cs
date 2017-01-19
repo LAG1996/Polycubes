@@ -60,7 +60,8 @@ public class MonoCube : MonoBehaviour
         bottom = new CubeFace(cube.transform.Find("BottomFace"), "BottomFace", this);
         Faces.Add(bottom);
         IsFaceRotating.Add("BottomFace", false);
-    }
+        
+}
 
     public void ReparentFaceFromAnotherCube(MonoCube sourceCube, string sourceCubeFace, string thisCubeFace)
     {
@@ -180,3 +181,4 @@ public class MonoCube : MonoBehaviour
         }
     }
 }
+   
