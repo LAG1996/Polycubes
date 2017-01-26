@@ -75,6 +75,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Control_Cam.cs" />
+    <Compile Include="Assets\Scripts\CUBESv0_1\Classes\AdjacencyMap.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\Classes\FaceInfo.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\TestScript.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Assets\Scripts\System\TestScripts\Grouping_sides.cs" />
     <Compile Include="Assets\Scripts\System\TestScripts\HardUnfoldCube.cs" />
     <Compile Include="Assets\SystemConstants.cs" />
+    <Compile Include="Assets\SystemsUI.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
