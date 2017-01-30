@@ -59,6 +59,14 @@ public class AdjacencyMap {
         return Nodes.Values.ToString();
     }
 
+    private Node TransformToNode(Transform face)
+    {
+        Node n;
+        Nodes.TryGetValue(face.position, out n);
+
+        return n;
+    }
+
     ~AdjacencyMap()
     {
         Nodes.Clear();

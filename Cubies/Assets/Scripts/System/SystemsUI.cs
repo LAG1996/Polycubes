@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SystemsUI : MonoBehaviour {
-
-    
+     
     public GameObject camcam;
 
     private Control_Cam camcamScript;
@@ -27,7 +26,14 @@ public class SystemsUI : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Escape))
+        _HandleKeyboard();
+        _HandleMouse();
+
+    }
+
+    void _HandleKeyboard()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))
         {
             if (Cursor.lockState == CursorLockMode.None)
                 Cursor.lockState = CursorLockMode.Locked;
@@ -35,31 +41,34 @@ public class SystemsUI : MonoBehaviour {
                 Cursor.lockState = CursorLockMode.None;
             camcamScript.allowMove = !camcamScript.allowMove;
         }
-        
-        if(Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+
+        if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.HINGE_MODE;
             Debug.Log(state);
         }
-        else if(Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        else if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.UNFOLD_MODE;
             Debug.Log(state);
         }
-        else if(Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        else if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.CUT_MODE;
             Debug.Log(state);
         }
+    }
 
-        if(Input.GetMouseButtonDown(0))
+    void _HandleMouse()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
             Ray ray = camcam.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
-            if(Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Edge")))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
-                Debug.Log("Hit edge at " + hit.transform.position);
+                Debug.Log(hit.collider.tag);
             }
         }
     }

@@ -21,10 +21,9 @@ public class TestSystemScript : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        p = new PolyCube(cube.transform.lossyScale.x);
+        Mathf.Clamp(scale, 1.0f, Mathf.Infinity);
+        p = new PolyCube(scale);
         BuildPolyCube();
-
-        p.DumpAdjacencyFaces();
     }
 	
 	// Update is called once per frame
@@ -54,5 +53,6 @@ public class TestSystemScript : MonoBehaviour {
         }
         cubePositions.Clear();
         p.CreateDualGraph();
+
     }
 }
