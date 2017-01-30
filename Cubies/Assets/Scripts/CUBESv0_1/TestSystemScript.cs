@@ -50,7 +50,7 @@ public class TestSystemScript : MonoBehaviour {
     {
         foreach (Vector3 pos in cubePositions)
         {
-            p.AddCube(pos, Instantiate(cube, pos, Quaternion.identity, transform));
+            p.AddCube(pos, Instantiate(cube, pos * scale, Quaternion.identity, transform));
         }
         cubePositions.Clear();
         p.CreateDualGraph();
