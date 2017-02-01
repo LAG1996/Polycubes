@@ -7,6 +7,7 @@ public class SystemsUI : MonoBehaviour {
     public GameObject camcam;
 
     private Control_Cam camcamScript;
+    private TestSystemScript systemScript;
 
     private enum State {
         VIEW_MODE,
@@ -19,6 +20,8 @@ public class SystemsUI : MonoBehaviour {
     void Start () {
         camcamScript = camcam.GetComponent<Control_Cam>();
         camcamScript.allowMove = false;
+
+        systemScript = gameObject.GetComponent<TestSystemScript>();
 
         Debug.Log(state);
     }
@@ -42,19 +45,24 @@ public class SystemsUI : MonoBehaviour {
             camcamScript.allowMove = !camcamScript.allowMove;
         }
 
-        if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        if (Input.GetKeyDown(KeyCode.A) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.HINGE_MODE;
             Debug.Log(state);
         }
-        else if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        else if (Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.UNFOLD_MODE;
             Debug.Log(state);
         }
-        else if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        else if (Input.GetKeyDown(KeyCode.D) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.CUT_MODE;
+            Debug.Log(state);
+        }
+        else if(Input.GetKeyDown(KeyCode.Q) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            state = State.VIEW_MODE;
             Debug.Log(state);
         }
     }
@@ -68,8 +76,34 @@ public class SystemsUI : MonoBehaviour {
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
-                Debug.Log(hit.collider.tag);
+                _HandleMouseClickOnState(hit.transform);
             }
+        }
+    }
+
+    void _HandleMouseClickOnState(Transform trans)
+    {
+        switch(state)
+        {
+            case State.HINGE_MODE: _HandleHingeMode(trans);
+                break;
+            default: break;
+        }
+    }
+
+    void _HandleHingeMode(Transform trans)
+    {
+        if(trans.name == "edge")
+        {
+            PolyCube.EnqueueParentEdge(trans);
+        }
+        else if(trans.name == "body")
+        {
+            PolyCube.ReparentFace(trans);
+        }
+        else
+        {
+            Debug.Log("Something's wrong: " + name);
         }
     }
 }

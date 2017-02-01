@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\CUBESv0_1\Classes\AdjacencyMap.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\Classes\FaceInfo.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs" />
+    <Compile Include="Assets\Scripts\CUBESv0_1\Classes\PreciseVectors.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\TestScript.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\TestSystemScript.cs" />
     <Compile Include="Assets\Scripts\CubeFace.cs" />
