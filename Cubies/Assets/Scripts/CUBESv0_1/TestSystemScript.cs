@@ -60,12 +60,12 @@ public class TestSystemScript : MonoBehaviour {
         //p.BuildDualGraph();
     }
 
-    /*
-    PolyCube GetPolyCubeFromGameObject(GameObject poly)
+    
+    public PolyCube GetPolyCubeFromGameObject(GameObject poly)
     {
         PolyCube n;
         PolyCubeObjectToPolyCube.TryGetValue(poly, out n);
 
         return n;
-    }*/
+    }
 }

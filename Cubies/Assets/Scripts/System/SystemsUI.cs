@@ -9,6 +9,9 @@ public class SystemsUI : MonoBehaviour {
     private Control_Cam camcamScript;
     private TestSystemScript systemScript;
 
+    private bool pickedHinge = false;
+    private Transform rotationHinge = null;
+
     private enum State {
         VIEW_MODE,
         HINGE_MODE,
@@ -36,33 +39,52 @@ public class SystemsUI : MonoBehaviour {
 
     void _HandleKeyboard()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))
+        if(state == State.VIEW_MODE)
         {
-            if (Cursor.lockState == CursorLockMode.None)
-                Cursor.lockState = CursorLockMode.Locked;
-            else
-                Cursor.lockState = CursorLockMode.None;
-            camcamScript.allowMove = !camcamScript.allowMove;
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (Cursor.lockState == CursorLockMode.None)
+                    Cursor.lockState = CursorLockMode.Locked;
+                else
+                    Cursor.lockState = CursorLockMode.None;
+                camcamScript.allowMove = !camcamScript.allowMove;
+            }
         }
+        else if(state == State.HINGE_MODE)
+        {
+            if(Input.GetKeyDown(KeyCode.Space) && rotationHinge != null)
+            {
+                systemScript.GetPolyCubeFromGameObject(rotationHinge.parent.parent.parent.gameObject).StartRotate();
+            }
+        }
+        
 
         if (Input.GetKeyDown(KeyCode.A) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.HINGE_MODE;
+            Cursor.lockState = CursorLockMode.None;
+            camcamScript.allowMove = false;
             Debug.Log(state);
         }
         else if (Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.UNFOLD_MODE;
+            Cursor.lockState = CursorLockMode.None;
+            camcamScript.allowMove = false;
             Debug.Log(state);
         }
         else if (Input.GetKeyDown(KeyCode.D) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.CUT_MODE;
+            Cursor.lockState = CursorLockMode.None;
+            camcamScript.allowMove = false;
             Debug.Log(state);
         }
         else if(Input.GetKeyDown(KeyCode.Q) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.VIEW_MODE;
+            Cursor.lockState = CursorLockMode.Locked;
+            camcamScript.allowMove = true;
             Debug.Log(state);
         }
     }
@@ -93,13 +115,17 @@ public class SystemsUI : MonoBehaviour {
 
     void _HandleHingeMode(Transform trans)
     {
+        rotationHinge = trans;
         if(trans.name == "edge")
         {
-            PolyCube.EnqueueParentEdge(trans);
+            Debug.Log(trans.parent.parent);
+            systemScript.GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject).SetRotationEdge(trans, pickedHinge);
+            pickedHinge = true;
+            Debug.Log("Children?");
         }
         else if(trans.name == "body")
         {
-            PolyCube.ReparentFace(trans);
+            systemScript.GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject).ReparentFace(trans);
         }
         else
         {

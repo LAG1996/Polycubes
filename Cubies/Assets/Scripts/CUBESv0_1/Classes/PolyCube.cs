@@ -15,7 +15,8 @@ public class PolyCube
     private AdjacencyMap DualGraph = new AdjacencyMap();
 
     private Queue<GameObject> FacesToDestroy = new Queue<GameObject>();
-    private static Queue<Transform> ParentEdges = new Queue<Transform>();
+    private Transform RotateEdge;
+    private Queue<Transform> FacesToRotate = new Queue<Transform>();
 
     private float _CUBE_SCALE;
     private float _SPACING;
@@ -32,18 +33,33 @@ public class PolyCube
         cubeCount = 0;
     }
 
-    /*
-    Create a new object that acts as a super-hinge that its child faces will rotate around?
-    public static void EnqueueParentEdge(Transform edge)
+    
+    //Create a new object that acts as a super-hinge that its child faces will rotate around?
+    public void SetRotationEdge(Transform edge, bool replaceHinge)
     {
-        ParentEdges.Enqueue(edge);
+        if(!replaceHinge)
+           RotateEdge = edge;
+        else
+        {
+            FacesToRotate.Clear();
+            RotateEdge = edge;
+        }
     }
 
-    public static void ReparentFace(Transform face)
+    public void ReparentFace(Transform face)
     {
-        
+        FacesToRotate.Enqueue(face.parent);
     }
-    */
+
+    public void StartRotate()
+    {
+        int amt_faces = FacesToRotate.Count;
+
+        for(int i = 0; i < amt_faces; i++)
+        {
+            FacesToRotate.Dequeue().RotateAround(RotateEdge.position, RotateEdge.forward, 90.0f);
+        }
+    }
 
     //Adds a new cube to the polycube structure
     public void AddCube(Vector3 position, GameObject cube)
