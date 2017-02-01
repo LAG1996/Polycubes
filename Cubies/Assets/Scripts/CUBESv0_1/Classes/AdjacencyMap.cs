@@ -7,64 +7,61 @@ public class AdjacencyMap {
     //*******************
     //  PRIVATE VARS
     //*******************
-    private Dictionary<Vector3, Node> Nodes;
+    private Dictionary<Transform, Node> Nodes;
 	//*******************
     //  CONSTRUCTOR
     //*******************
 	public AdjacencyMap ()
     {
-        Nodes = new Dictionary<Vector3, Node>();
+        Nodes = new Dictionary<Transform, Node>();
 	}
 
-    public void AddAdjacentFaces(Transform face_1, Transform face_2)
+    public void AddNeighbors(Transform node, Transform neighbor)
     {
-        Node n = new Node(face_1);
-        Node m = new Node(face_2);
-
-        if (NodeExists(face_1))
+        if(!Nodes.ContainsKey(node))
         {
-            Node k;
-            Nodes.TryGetValue(face_1.position, out k);
+            AddNewNode(node);
+        }
 
-            if(!k.NeighborExists(m))
-                k.AddNeighbor(m);
-        }
-        else if (NodeExists(face_2))
+        if(!Nodes.ContainsKey(neighbor))
         {
-            Node k;
-            Nodes.TryGetValue(face_2.position, out k);
+            AddNewNode(neighbor);
+        }
 
-            if (!k.NeighborExists(n))
-                k.AddNeighbor(n); ;
-        }
-        else
-        {
-            Nodes.Add(face_1.position, n);
-            Nodes.Add(face_2.position, m);
-        }
+        Nodes[node].AddNeighbor(Nodes[neighbor]);
+        Nodes[neighbor].AddNeighbor(Nodes[node]);
+        
+    }
+
+    private void AddNewNode(Transform t)
+    {
+        Node newNode = new Node(t);
+        Nodes.Add(t, newNode);
     }
 
     public bool NodeExists(Transform face)
     {
-        return Nodes.ContainsKey(face.position);
+        return Nodes.ContainsKey(face);
     }
 
-    public bool NodeExists(Vector3 pos)
+    public void DataDump()
     {
-        return Nodes.ContainsKey(pos);
+        foreach(Transform k in Nodes.Keys)
+        {
+            string neighbors = "";
+
+            foreach(Node n in Nodes[k].Neighbors)
+            {
+                neighbors += n.face.name +",";
+            }
+
+            Debug.Log(k.name + "'s neighbors: {" + neighbors + "}");
+        }
     }
 
     public override string ToString()
     {
         return Nodes.Values.ToString();
-    }
-
-    private Node TransformToNode(Transform face)
-    {
-        Node n;
-        Nodes.TryGetValue(face.position, out n);
-
-        return n;
     }
 
     ~AdjacencyMap()
@@ -75,28 +72,29 @@ public class AdjacencyMap {
 
     protected class Node
     {
-        private Transform face;
-        private Dictionary<Vector3, Node> Neighbors;
+        public Transform face;
+        public List<Node> Neighbors;
         
         public Node(Transform face)
         {
             this.face = face;
-            Neighbors = new Dictionary<Vector3, Node>();
+            Neighbors = new List<Node>();
         }
         
         public void AddNeighbor(Node f)
         {
-            this.Neighbors.Add(f.face.position, f);
+            if(!NeighborExists(f))
+                Neighbors.Add(f);
         }
 
-        public void RemoveNeighborAtPosition(Vector3 pos)
+        public void RemoveNeighbor(Node f)
         {
-            Neighbors.Remove(pos);
+            Neighbors.Remove(f);
         }
 
         public bool NeighborExists(Node n)
         {
-            return Neighbors.ContainsValue(n);
+            return Neighbors.Contains(n);
         }
 
         ~Node()

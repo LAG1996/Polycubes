@@ -11,7 +11,7 @@ public class PolyCube
     /***********************************
     *   PRIVATE VARIABLES
     ************************************/
-    private Dictionary<string, Transform> MapOfFaces = new Dictionary<string, Transform>();
+    private Dictionary<Vector3, Transform> MapOfFaces = new Dictionary<Vector3, Transform>();
     private AdjacencyMap DualGraph = new AdjacencyMap();
 
     private Queue<GameObject> FacesToDestroy = new Queue<GameObject>();
@@ -88,9 +88,9 @@ public class PolyCube
 
     public void BuildDualGraph()
     {
-       foreach(Transform face in MapOfFaces.Values)
+       foreach(Vector3 key in MapOfFaces.Keys)
         {
-           FindAdjacentFaces(face);
+           FindAdjacentFaces(key);
        }
     }
 
@@ -99,9 +99,17 @@ public class PolyCube
         return cubeCount;
     }
 
-    public string DumpAdjacentFaces()
+    public void DumpFaces()
     {
-        return DualGraph.ToString();
+        foreach(Vector3 key in MapOfFaces.Keys)
+        {
+            Debug.Log(MapOfFaces[key].name + ": " + MapOfFaces[key]);
+        }
+    }
+
+    public void DumpAdjacency()
+    {
+        DualGraph.DataDump();
     }
 
     /*
@@ -120,13 +128,13 @@ public class PolyCube
         //For each face in the cube...
         foreach (Transform face in cube.transform)
         {
-            string pos = new PreciseVector(face.position).ToString();
+            //string pos = PreciseVector.Vector3ToDecimalString(face.position, 1);
             //Check if that face would already exist in a downscaling of the polycube
-            if (!MapOfFaces.ContainsKey(pos))
+            if (!MapOfFaces.ContainsKey(face.position))
             {  
                 //if it does not, then we can safely add it to the MapOfFaces
                 face.name = "face_" + (MapOfFaces.Count + 1);
-                MapOfFaces.Add(pos, face);
+                MapOfFaces.Add(face.position, face);
             }
             else
             {
@@ -135,8 +143,8 @@ public class PolyCube
                 //as that will break the loop and cause a crash. Instead we...
                 //...remove the face from the polycube from the MapOfFaces...
                 Transform faceToDestroy;
-                MapOfFaces.TryGetValue(pos, out faceToDestroy);
-                MapOfFaces.Remove(pos);
+                MapOfFaces.TryGetValue(face.position, out faceToDestroy);
+                MapOfFaces.Remove(face.position);
 
                 Object.Destroy(faceToDestroy.gameObject); //...then we destroy that face in the polycube
                 FacesToDestroy.Enqueue(face.gameObject); //then we queue the face from the cube we are checking for destruction.
@@ -155,81 +163,80 @@ public class PolyCube
     //We only need to search up or down along the normal by 0.5 * scale units from the edge's center to find another face.
 
     //TODO: Fix this up and add robustness to it.
-    private void FindAdjacentFaces(Transform face)
+    private void FindAdjacentFaces(Vector3 key)
     {
-        //Debug.Log(face.name + " " + face.position);
+        Transform currentFace = MapOfFaces[key];
 
         //Some utility vectors that we'll be using
-        Vector3 back = face.up * -1.0f * _CUBE_SCALE * 0.5f;
-        Vector3 forward = face.up * _CUBE_SCALE * 0.5f;
-        Vector3 left = face.right * -1.0f *_CUBE_SCALE;
-        Vector3 right = face.right *_CUBE_SCALE;
-        Vector3 down = face.forward * -1.0f * _CUBE_SCALE;
-        Vector3 up = face.forward * _CUBE_SCALE;
+        Vector3 back = currentFace.up * -1.0f * _CUBE_SCALE * 0.5f;
+        Vector3 forward = currentFace.up * _CUBE_SCALE * 0.5f;
+        Vector3 left = currentFace.right * -1.0f *_CUBE_SCALE;
+        Vector3 right = currentFace.right *_CUBE_SCALE;
+        Vector3 down = currentFace.forward * -1.0f * _CUBE_SCALE;
+        Vector3 up = currentFace.forward * _CUBE_SCALE;
 
-        Transform adjacentFace;
-
-        
+        Queue<Transform> adjacentFaces = new Queue<Transform>();
         //Step 1: Check for adjacent faces within our own cube
-        if (MapOfFaces.TryGetValue(new PreciseVector(face.position + back + right).ToString(), out adjacentFace))
+        if (MapOfFaces.ContainsKey(key + back + right*0.5f))
         {
-            Debug.Log(face.name + " is adjacent to " + adjacentFace.name);
+            adjacentFaces.Enqueue(MapOfFaces[key + back + right * 0.5f]);
+        }
+        if (MapOfFaces.ContainsKey(key + back + left * 0.5f))
+        {
+            adjacentFaces.Enqueue(MapOfFaces[key + back + left * 0.5f]);
+        }
+        if (MapOfFaces.ContainsKey(key + back + up * 0.5f))
+        {
+            adjacentFaces.Enqueue(MapOfFaces[key + back + up * 0.5f]);
+        }
+        if (MapOfFaces.ContainsKey(key + back + down * 0.5f))
+        {
+            adjacentFaces.Enqueue(MapOfFaces[key + back + down * 0.5f]);
+        }
+        
+
+        //Step 2: Check for adjacent faces to the left, right, up, and down. We also have to make sure that the cubes of each respective face are not diagonal of each other
+        //In other words, make sure that the adjacent faces also have equal normals.    
+        if (MapOfFaces.ContainsKey(key + right))
+        {
+            adjacentFaces.Enqueue(MapOfFaces[key + right]);
+        }
+        if (MapOfFaces.ContainsKey(key + left))
+        {
+            adjacentFaces.Enqueue(MapOfFaces[key + left]);
+        }
+        if (MapOfFaces.ContainsKey(key + up))
+        {
+            adjacentFaces.Enqueue(MapOfFaces[key + up]);
         }
 
-        if (MapOfFaces.TryGetValue(new PreciseVector(face.position + back + left).ToString(), out adjacentFace))
+        if (MapOfFaces.ContainsKey(key + down))
         {
-            Debug.Log(face.name + " is adjacent to " + adjacentFace.name);
+            adjacentFaces.Enqueue(MapOfFaces[key + down]);
         }
 
-        if (MapOfFaces.TryGetValue(new PreciseVector(face.position + back + down).ToString(), out adjacentFace))
+        //Step 3: Check for adjacent faces to the forward-left, forward-right, forward-up, forward-down
+        if (MapOfFaces.ContainsKey(key + forward + right * 0.5f))
         {
-            Debug.Log(face.name + " is adjacent to " + adjacentFace.name);
+            adjacentFaces.Enqueue(MapOfFaces[key + forward + right * 0.5f]);
+        }
+        if (MapOfFaces.ContainsKey(key + forward + left * 0.5f))
+        {
+            adjacentFaces.Enqueue(MapOfFaces[key + forward + left * 0.5f]);
+        }
+        if (MapOfFaces.ContainsKey(key + forward + up * 0.5f))
+        {
+            adjacentFaces.Enqueue(MapOfFaces[key + forward + up * 0.5f]);
+        }
+        if (MapOfFaces.ContainsKey(key + forward + down * 0.5f))
+        {
+            adjacentFaces.Enqueue(MapOfFaces[key + forward + down * 0.5f]);
         }
 
-        if (MapOfFaces.TryGetValue(new PreciseVector(face.position + back + up).ToString(), out adjacentFace))
+        while(adjacentFaces.Count > 0)
         {
-            Debug.Log(face.name + " is adjacent to " + adjacentFace.name);
+            DualGraph.AddNeighbors(adjacentFaces.Dequeue(), currentFace);
         }
-
-
-        //Step 2: Check for adjacent faces to the left, right, up, and down
-        /*
-        if (MapOfFaces.TryGetValue(face.position + up, out adjacentFace))
-        {
-            Debug.Log(face.name + " is adjacent to " + adjacentFace.name);
-        }
-        else
-        {
-            Debug.Log("Nope on " + (face.position + up));
-        }
-
-        if (MapOfFaces.TryGetValue(face.position + down, out adjacentFace))
-        {
-            Debug.Log(face.name + " is adjacent to " + adjacentFace.name);
-        }
-        else
-        {
-            Debug.Log("Nope on " + (face.position + down));
-        }
-
-        if (MapOfFaces.TryGetValue(face.position + left, out adjacentFace))
-        {
-            Debug.Log(face.name + " is adjacent to " + adjacentFace.name);
-        }
-        else
-        {
-            Debug.Log("Nope on " + (face.position + left));
-        }
-
-        if (MapOfFaces.TryGetValue(face.position + right, out adjacentFace))
-        {
-            Debug.Log(face.name + " is adjacent to " + adjacentFace.name);
-        }
-        else
-        {
-            Debug.Log("Nope on " + (face.position + right));
-        }
-        */
     }
 
     //Returns normal of face on the polycube

@@ -4,24 +4,17 @@ using UnityEngine;
 
 public class PreciseVector {
 
-    public decimal x;
-    public decimal y;
-    public decimal z;
-
-    public PreciseVector(Vector3 vector)
-    {
-        this.x = SetPrecision(vector.x, 1);
-        this.y = SetPrecision(vector.y, 1);
-        this.z = SetPrecision(vector.z, 1);
-    }
-
     public static decimal SetPrecision(float n, int precise)
     {
-        return decimal.Round((decimal)n, 1);
+        return decimal.Round((decimal)n, precise);
     }
 
-    public override string ToString()
+    public static string Vector3ToDecimalString(Vector3 vector, int precision)
     {
-        return "(" + x + ", " + y + ", " + z + ")";
+        decimal X = PreciseVector.SetPrecision(vector.x, precision);
+        decimal Y = PreciseVector.SetPrecision(vector.y,  precision);
+        decimal Z = PreciseVector.SetPrecision(vector.z, precision);
+
+        return X + "," + Y + "," + Z;
     }
 }

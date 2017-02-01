@@ -54,10 +54,10 @@ public class TestSystemScript : MonoBehaviour {
             p.AddCube(pos, Instantiate(cube, pos, Quaternion.identity, poly.transform));
         }
         cubePositions.Clear();
-
         PolyCubeObjectToPolyCube.Add(poly, p);
-
-        //p.BuildDualGraph();
+        
+        p.BuildDualGraph();
+        p.DumpAdjacency();
     }
 
     
