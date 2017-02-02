@@ -48,7 +48,8 @@ public class PolyCube
 
     public void ReparentFace(Transform face)
     {
-        FacesToRotate.Enqueue(face.parent);
+        if(!FacesToRotate.Contains(face))
+            FacesToRotate.Enqueue(face.parent);
     }
 
     public void StartRotate()
@@ -57,7 +58,7 @@ public class PolyCube
 
         for(int i = 0; i < amt_faces; i++)
         {
-            FacesToRotate.Dequeue().RotateAround(RotateEdge.position, RotateEdge.forward, 90.0f);
+            FacesToRotate.Dequeue().RotateAround(RotateEdge.position, RotateEdge.forward, 45.0f);
         }
     }
 
