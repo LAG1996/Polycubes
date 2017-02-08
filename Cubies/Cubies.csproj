@@ -80,6 +80,8 @@
     <Compile Include="Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\Classes\PreciseVectors.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\Control_Cam.cs" />
+    <Compile Include="Assets\Scripts\CUBESv0_1\SingleCube.cs" />
+    <Compile Include="Assets\Scripts\CUBESv0_1\SingleFace.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\SystemsUI.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\TestScript.cs" />
     <Compile Include="Assets\Scripts\CUBESv0_1\TestSystemScript.cs" />

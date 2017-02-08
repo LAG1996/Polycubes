@@ -57,7 +57,7 @@ public class TestSystemScript : MonoBehaviour {
         PolyCubeObjectToPolyCube.Add(poly, p);
         
         p.BuildDualGraph();
-        p.DumpAdjacency();
+        //p.DumpAdjacency();
     }
 
     

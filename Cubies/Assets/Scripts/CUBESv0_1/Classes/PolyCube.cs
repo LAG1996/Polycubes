@@ -11,16 +11,20 @@ public class PolyCube
     /***********************************
     *   PRIVATE VARIABLES
     ************************************/
-    private Dictionary<Vector3, Transform> MapOfFaces = new Dictionary<Vector3, Transform>();
+    private Dictionary<Vector3, SingleFace> MapOfFaces = new Dictionary<Vector3, SingleFace>();
+    private Dictionary<Vector3, SingleCube> MapOfCubes = new Dictionary<Vector3, SingleCube>(); 
+
     private AdjacencyMap DualGraph = new AdjacencyMap();
 
     private Queue<GameObject> FacesToDestroy = new Queue<GameObject>();
+    private Queue<SingleFace> FacesToParent = new Queue<SingleFace>();
     private Transform RotateEdge;
     private Queue<Transform> FacesToRotate = new Queue<Transform>();
 
     private float _CUBE_SCALE;
     private float _SPACING;
     private int cubeCount;
+    private int faceCount;
 
     /************************************
     *   CONSTRUCTOR
@@ -31,6 +35,7 @@ public class PolyCube
         _CUBE_SCALE = cubeScale;
         _SPACING = spacing;
         cubeCount = 0;
+        faceCount = 0;
     }
 
     
@@ -76,6 +81,15 @@ public class PolyCube
             {
                 cubeCount += 1;
 
+                SingleCube c = new SingleCube(position, cube.transform);
+
+                while(FacesToParent.Count > 0)
+                {
+                    SingleFace f = FacesToParent.Dequeue();
+                    c.AddNewFace(f);
+                    f.Parent = c;
+                }
+
                 cube.transform.position = cube.transform.position * _SPACING;
                 cube.SetActive(true);
             }
@@ -89,9 +103,9 @@ public class PolyCube
 
     public void BuildDualGraph()
     {
-       foreach(Vector3 key in MapOfFaces.Keys)
+       foreach(SingleFace face in MapOfFaces.Values)
         {
-           FindAdjacentFaces(key);
+           FindAdjacentFaces(face);
        }
     }
 
@@ -100,28 +114,10 @@ public class PolyCube
         return cubeCount;
     }
 
-    public void DumpFaces()
-    {
-        foreach(Vector3 key in MapOfFaces.Keys)
-        {
-            Debug.Log(MapOfFaces[key].name + ": " + MapOfFaces[key]);
-        }
-    }
-
     public void DumpAdjacency()
     {
         DualGraph.DataDump();
     }
-
-    /*
-    private Vector3 ScalePosition(Transform t)
-    {
-        if (_CUBE_SCALE < 1.125f)
-            return t.position - t.up * (1 - _CUBE_SCALE);
-        else
-            return t.position;
-    }
-    */
 
     //Removes incident faces
     private void Clean(GameObject cube)
@@ -134,8 +130,10 @@ public class PolyCube
             if (!MapOfFaces.ContainsKey(face.position))
             {  
                 //if it does not, then we can safely add it to the MapOfFaces
-                face.name = "face_" + (MapOfFaces.Count + 1);
-                MapOfFaces.Add(face.position, face);
+                face.name = "face_" + (++faceCount);
+                SingleFace f = new SingleFace(face.position - cube.transform.position, face);
+                FacesToParent.Enqueue(f);
+                MapOfFaces.Add(f.GetLatticePosition(), f);
             }
             else
             {
@@ -143,11 +141,26 @@ public class PolyCube
                 //We cannot destroy the child face of the cube we are currently checking immediately
                 //as that will break the loop and cause a crash. Instead we...
                 //...remove the face from the polycube from the MapOfFaces...
-                Transform faceToDestroy;
+                Vector3 PositionofIncidence;
+                SingleFace faceToDestroy;
                 MapOfFaces.TryGetValue(face.position, out faceToDestroy);
-                MapOfFaces.Remove(face.position);
 
-                Object.Destroy(faceToDestroy.gameObject); //...then we destroy that face in the polycube
+                PositionofIncidence = face.position;
+
+                SingleCube c;
+                c = MapOfFaces[PositionofIncidence].Parent;
+                c.RemoveFace(MapOfFaces[PositionofIncidence]);
+
+                if (c.ListOfFaces.Count == 0)
+                {
+                    MapOfCubes.Remove(c.Cube.position);
+                    Object.Destroy(c.Cube);
+                    cubeCount -= 1;
+                }
+
+                MapOfFaces.Remove(PositionofIncidence);
+
+                Object.Destroy(faceToDestroy.Trans.gameObject); //...then we destroy that face in the polycube
                 FacesToDestroy.Enqueue(face.gameObject); //then we queue the face from the cube we are checking for destruction.
             }
         }
@@ -164,80 +177,26 @@ public class PolyCube
     //We only need to search up or down along the normal by 0.5 * scale units from the edge's center to find another face.
 
     //TODO: Fix this up and add robustness to it.
-    private void FindAdjacentFaces(Vector3 key)
+    private void FindAdjacentFaces(SingleFace face)
     {
-        Transform currentFace = MapOfFaces[key];
+        Vector3 normal = face.Trans.up;
+        Vector3 right = face.Trans.right;
+        Vector3 forward = face.Trans.forward;
 
-        //Some utility vectors that we'll be using
-        Vector3 back = currentFace.up * -1.0f * _CUBE_SCALE * 0.5f;
-        Vector3 forward = currentFace.up * _CUBE_SCALE * 0.5f;
-        Vector3 left = currentFace.right * -1.0f *_CUBE_SCALE;
-        Vector3 right = currentFace.right *_CUBE_SCALE;
-        Vector3 down = currentFace.forward * -1.0f * _CUBE_SCALE;
-        Vector3 up = currentFace.forward * _CUBE_SCALE;
+        SingleCube Parent = face.Parent;
 
-        Queue<Transform> adjacentFaces = new Queue<Transform>();
-        //Step 1: Check for adjacent faces within our own cube
-        if (MapOfFaces.ContainsKey(key + back + right*0.5f))
+        /*Check for adjacent faces within the cube*/
+        foreach(SingleFace f in Parent.ListOfFaces)
         {
-            adjacentFaces.Enqueue(MapOfFaces[key + back + right * 0.5f]);
-        }
-        if (MapOfFaces.ContainsKey(key + back + left * 0.5f))
-        {
-            adjacentFaces.Enqueue(MapOfFaces[key + back + left * 0.5f]);
-        }
-        if (MapOfFaces.ContainsKey(key + back + up * 0.5f))
-        {
-            adjacentFaces.Enqueue(MapOfFaces[key + back + up * 0.5f]);
-        }
-        if (MapOfFaces.ContainsKey(key + back + down * 0.5f))
-        {
-            adjacentFaces.Enqueue(MapOfFaces[key + back + down * 0.5f]);
-        }
-        
-
-        //Step 2: Check for adjacent faces to the left, right, up, and down. We also have to make sure that the cubes of each respective face are not diagonal of each other
-        //In other words, make sure that the adjacent faces also have equal normals.    
-        if (MapOfFaces.ContainsKey(key + right))
-        {
-            adjacentFaces.Enqueue(MapOfFaces[key + right]);
-        }
-        if (MapOfFaces.ContainsKey(key + left))
-        {
-            adjacentFaces.Enqueue(MapOfFaces[key + left]);
-        }
-        if (MapOfFaces.ContainsKey(key + up))
-        {
-            adjacentFaces.Enqueue(MapOfFaces[key + up]);
+            if (normal + f.Trans.up != Vector3.zero && face != f)
+            {
+                DualGraph.AddNeighbors(face.Trans, f.Trans);
+                Debug.Log("Adjacent faces: " + f.Trans.name + " and " + face.Trans.name);
+            }
         }
 
-        if (MapOfFaces.ContainsKey(key + down))
-        {
-            adjacentFaces.Enqueue(MapOfFaces[key + down]);
-        }
+        /*Check faces immediately to the left, right, below, or above*/
 
-        //Step 3: Check for adjacent faces to the forward-left, forward-right, forward-up, forward-down
-        if (MapOfFaces.ContainsKey(key + forward + right * 0.5f))
-        {
-            adjacentFaces.Enqueue(MapOfFaces[key + forward + right * 0.5f]);
-        }
-        if (MapOfFaces.ContainsKey(key + forward + left * 0.5f))
-        {
-            adjacentFaces.Enqueue(MapOfFaces[key + forward + left * 0.5f]);
-        }
-        if (MapOfFaces.ContainsKey(key + forward + up * 0.5f))
-        {
-            adjacentFaces.Enqueue(MapOfFaces[key + forward + up * 0.5f]);
-        }
-        if (MapOfFaces.ContainsKey(key + forward + down * 0.5f))
-        {
-            adjacentFaces.Enqueue(MapOfFaces[key + forward + down * 0.5f]);
-        }
-
-        while(adjacentFaces.Count > 0)
-        {
-            DualGraph.AddNeighbors(adjacentFaces.Dequeue(), currentFace);
-        }
     }
 
     //Returns normal of face on the polycube
