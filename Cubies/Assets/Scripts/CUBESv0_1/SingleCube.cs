@@ -10,6 +10,7 @@ public class SingleCube {
 
     public List<SingleFace> ListOfFaces { get { return Faces; } }
     public Transform Cube { get { return cube; } }
+    public Vector3 Position { get { return position; } }
 
 	public SingleCube(Vector3 position, Transform cube)
     {
@@ -30,5 +31,16 @@ public class SingleCube {
     public void RemoveFace(SingleFace face)
     {
         Faces.Remove(face);
+    }
+
+    public void DumpFaces()
+    {
+        Debug.Log("--------FACES---------");
+        string faces = "";
+        foreach(SingleFace f in ListOfFaces)
+        {
+            faces += f.Trans.name + ", ";
+        }
+        Debug.Log("{ " + faces + "}");
     }
 }

@@ -46,6 +46,7 @@ public class AdjacencyMap {
 
     public void DataDump()
     {
+        Debug.Log("-------FACE : NEIGHBORS--------");
         foreach(Transform k in Nodes.Keys)
         {
             string neighbors = "";
@@ -55,7 +56,7 @@ public class AdjacencyMap {
                 neighbors += n.face.name +",";
             }
 
-            Debug.Log(k.name + "'s neighbors: {" + neighbors + "}");
+            Debug.Log(k.name + " : {" + neighbors + "}");
         }
     }
 

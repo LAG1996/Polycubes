@@ -55,7 +55,8 @@ public class TestSystemScript : MonoBehaviour {
         }
         cubePositions.Clear();
         PolyCubeObjectToPolyCube.Add(poly, p);
-        
+        //p.DumpMapOfCubes();
+        //p.DumpMapOfFaces();
         p.BuildDualGraph();
         //p.DumpAdjacency();
     }

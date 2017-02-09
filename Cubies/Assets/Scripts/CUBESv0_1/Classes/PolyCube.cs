@@ -11,8 +11,8 @@ public class PolyCube
     /***********************************
     *   PRIVATE VARIABLES
     ************************************/
-    private Dictionary<Vector3, SingleFace> MapOfFaces = new Dictionary<Vector3, SingleFace>();
-    private Dictionary<Vector3, SingleCube> MapOfCubes = new Dictionary<Vector3, SingleCube>(); 
+    private Dictionary<string, SingleFace> MapOfFaces = new Dictionary<string, SingleFace>();
+    private Dictionary<string, SingleCube> MapOfCubes = new Dictionary<string, SingleCube>(); 
 
     private AdjacencyMap DualGraph = new AdjacencyMap();
 
@@ -90,6 +90,7 @@ public class PolyCube
                     f.Parent = c;
                 }
 
+                MapOfCubes.Add(PreciseVector.Vector3ToDecimalString(position, 1), c);
                 cube.transform.position = cube.transform.position * _SPACING;
                 cube.SetActive(true);
             }
@@ -116,7 +117,31 @@ public class PolyCube
 
     public void DumpAdjacency()
     {
+        Debug.Log("-------DUAL GRAPH-------");
         DualGraph.DataDump();
+        Debug.Log("--------END DUAL GRAPH------");
+    }
+
+    public void DumpMapOfCubes()
+    {
+        Debug.Log("-----MAP OF CUBES----");
+        foreach(string key in MapOfCubes.Keys)
+        {
+            Debug.Log("-----CUBE POSITION----");
+            Debug.Log(key);
+            MapOfCubes[key].DumpFaces();
+        }
+        Debug.Log("-------END MAP OF CUBES---------");
+    }
+
+    public void DumpMapOfFaces()
+    {
+        Debug.Log("---------MAP OF FACES-------");
+        foreach(string key in MapOfFaces.Keys)
+        {
+            Debug.Log(MapOfFaces[key].Trans.name + " : " + key);
+        }
+        Debug.Log("--------END MAP OF FACES-------");
     }
 
     //Removes incident faces
@@ -127,13 +152,13 @@ public class PolyCube
         {
             //string pos = PreciseVector.Vector3ToDecimalString(face.position, 1);
             //Check if that face would already exist in a downscaling of the polycube
-            if (!MapOfFaces.ContainsKey(face.position))
+            if (!MapOfFaces.ContainsKey(PreciseVector.Vector3ToDecimalString(face.position, 1)))
             {  
                 //if it does not, then we can safely add it to the MapOfFaces
                 face.name = "face_" + (++faceCount);
                 SingleFace f = new SingleFace(face.position - cube.transform.position, face);
                 FacesToParent.Enqueue(f);
-                MapOfFaces.Add(f.GetLatticePosition(), f);
+                MapOfFaces.Add(PreciseVector.Vector3ToDecimalString(f.GetLatticePosition(), 1), f);
             }
             else
             {
@@ -141,11 +166,11 @@ public class PolyCube
                 //We cannot destroy the child face of the cube we are currently checking immediately
                 //as that will break the loop and cause a crash. Instead we...
                 //...remove the face from the polycube from the MapOfFaces...
-                Vector3 PositionofIncidence;
+                string PositionofIncidence;
                 SingleFace faceToDestroy;
-                MapOfFaces.TryGetValue(face.position, out faceToDestroy);
+                MapOfFaces.TryGetValue(PreciseVector.Vector3ToDecimalString(face.position, 1), out faceToDestroy);
 
-                PositionofIncidence = face.position;
+                PositionofIncidence = PreciseVector.Vector3ToDecimalString(face.position, 1);
 
                 SingleCube c;
                 c = MapOfFaces[PositionofIncidence].Parent;
@@ -153,7 +178,7 @@ public class PolyCube
 
                 if (c.ListOfFaces.Count == 0)
                 {
-                    MapOfCubes.Remove(c.Cube.position);
+                    MapOfCubes.Remove(PreciseVector.Vector3ToDecimalString(c.Cube.position, 1));
                     Object.Destroy(c.Cube);
                     cubeCount -= 1;
                 }
@@ -179,24 +204,82 @@ public class PolyCube
     //TODO: Fix this up and add robustness to it.
     private void FindAdjacentFaces(SingleFace face)
     {
-        Vector3 normal = face.Trans.up;
-        Vector3 right = face.Trans.right;
-        Vector3 forward = face.Trans.forward;
+        //Debug.Log("Check for " + face.Trans.name + "'s adjacency");
 
+        Vector3 normal = face.Trans.up;
         SingleCube Parent = face.Parent;
+        List<Vector3> ParentDirections = new List<Vector3>();
+        //Debug.Log("Parent cube's position: " + Parent.Position);
+
+        ParentDirections.Add(Parent.Cube.up);
+        ParentDirections.Add(Parent.Cube.right);
+        ParentDirections.Add(-Parent.Cube.up);
+        ParentDirections.Add(-Parent.Cube.right);
+        ParentDirections.Add(Parent.Cube.forward);
+        ParentDirections.Add(-Parent.Cube.forward);
+
 
         /*Check for adjacent faces within the cube*/
-        foreach(SingleFace f in Parent.ListOfFaces)
+        foreach (SingleFace f in Parent.ListOfFaces)
         {
             if (normal + f.Trans.up != Vector3.zero && face != f)
             {
                 DualGraph.AddNeighbors(face.Trans, f.Trans);
-                Debug.Log("Adjacent faces: " + f.Trans.name + " and " + face.Trans.name);
+                //Debug.Log("Adjacent faces: " + f.Trans.name + " and " + face.Trans.name);
             }
         }
 
-        /*Check faces immediately to the left, right, below, or above*/
+        foreach(Vector3 dir in ParentDirections)
+        {
+            if(dir + normal != Vector3.zero)
+            {
+                //Debug.Log("Checking neighbor of parent cube at " + (Parent.Position + dir));
+                if (MapOfCubes.ContainsKey(PreciseVector.Vector3ToDecimalString(Parent.Position + dir, 1)))
+                {
+                    
+                    CheckNeighborCubes(face, MapOfCubes[PreciseVector.Vector3ToDecimalString(Parent.Position + dir, 1)]);
+                }
+            }
+        }
+    }
 
+    /*
+    Input: The face that we are currently checking for adjacency
+    Description: Check the neighboring cube's faces to see if they have the same normal as current_face. If so, 
+    then it is an adjacent face. Afterwards, check a neighbor of the neighbor cube for adjacent faces (see CheckDiagonal).
+    */
+    private void CheckNeighborCubes(SingleFace current_face, SingleCube neighbor)
+    {
+        //Debug.Log("Checking neighbor...");
+        foreach(SingleFace f in neighbor.ListOfFaces)
+        {
+            if(current_face.Trans.up == f.Trans.up)
+            {
+                //Debug.Log("Adjacent faces: " + f.Trans.name + " and " + current_face.Trans.name);
+                DualGraph.AddNeighbors(current_face.Trans, f.Trans);
+            }
+        }
+        //Debug.Log("Check for neighbor's neighbor at " + (neighbor.Position + current_face.Trans.up));
+        if (MapOfCubes.ContainsKey(PreciseVector.Vector3ToDecimalString(neighbor.Position + current_face.Trans.up, 1)))
+            CheckDiagonal(current_face, MapOfCubes[PreciseVector.Vector3ToDecimalString(neighbor.Position + current_face.Trans.up, 1)]);
+    }
+
+    /*
+    Input: The face that we are currently checking for adjacency
+    Description: Check the neighbor to the face's parent cube's neighbor, which is forward on the parent cube's plane, for adjacent faces.
+    Two faces are adjacent in this case if the normals of each face intersect.
+    */
+    private void CheckDiagonal(SingleFace current_face, SingleCube n_neighbor)
+    {
+        //Debug.Log("Checking neighbor of neighbor");
+        foreach (SingleFace f in n_neighbor.ListOfFaces)
+        {
+            if (current_face.GetLatticePosition() + current_face.Trans.up*0.5f == f.GetLatticePosition() + f.Trans.up*0.5f)
+            {
+                //Debug.Log("Adjacent faces: " + f.Trans.name + " and " + current_face.Trans.name);
+                DualGraph.AddNeighbors(current_face.Trans, f.Trans);
+            }
+        }
     }
 
     //Returns normal of face on the polycube
