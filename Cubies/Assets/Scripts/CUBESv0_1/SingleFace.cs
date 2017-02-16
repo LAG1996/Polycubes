@@ -8,7 +8,7 @@ public class SingleFace {
     private Vector3 localPosition;
     private Vector3 latticePosition;
     private Transform face;
-    private Dictionary<Vector3, Transform> edges;
+    private List<Transform> edges;
 
     public SingleCube Parent { get { return ParentCube; } set { ParentCube = value; } }
     public Transform Trans { get { return face; } }
@@ -20,14 +20,7 @@ public class SingleFace {
         latticePosition = face.position;
         this.face = face;
 
-        edges = new Dictionary<Vector3, Transform>();
-        foreach (Transform hinge in face)
-        {
-            if (hinge.name == "edge")
-            {
-                edges.Add(hinge.position, hinge);
-            }
-        }
+        
     }
 
     public SingleFace(Vector3 localPosition, Transform face)
@@ -37,12 +30,12 @@ public class SingleFace {
         this.localPosition = localPosition;
         this.face = face;
 
-        edges = new Dictionary<Vector3, Transform>();
+        edges = new List<Transform>();
         foreach (Transform hinge in face)
         {
             if (hinge.name == "edge")
             {
-                edges.Add(hinge.position, hinge);
+                edges.Add(hinge);
             }
         }
     }

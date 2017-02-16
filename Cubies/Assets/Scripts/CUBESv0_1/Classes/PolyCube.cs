@@ -12,11 +12,11 @@ public class PolyCube
     *   PRIVATE VARIABLES
     ************************************/
     private Dictionary<string, SingleFace> MapOfFaces = new Dictionary<string, SingleFace>();
-    private Dictionary<string, SingleCube> MapOfCubes = new Dictionary<string, SingleCube>(); 
+    private Dictionary<string, SingleCube> MapOfCubes = new Dictionary<string, SingleCube>();
+    private Dictionary<Transform, string> OriginalHingePos = new Dictionary<Transform, string>(); 
 
     private AdjacencyMap DualGraph = new AdjacencyMap();
 
-    private Queue<GameObject> FacesToDestroy = new Queue<GameObject>();
     private Queue<SingleFace> FacesToParent = new Queue<SingleFace>();
     private Transform RotateEdge;
     private Queue<Transform> FacesToRotate = new Queue<Transform>();
@@ -86,7 +86,7 @@ public class PolyCube
                 while(FacesToParent.Count > 0)
                 {
                     SingleFace f = FacesToParent.Dequeue();
-                    c.AddNewFace(f);
+                    c.AddNewFace(f, ref OriginalHingePos);
                     f.Parent = c;
                 }
 
@@ -147,6 +147,8 @@ public class PolyCube
     //Removes incident faces
     private void Clean(GameObject cube)
     {
+
+        Queue<GameObject> FacesToDestroy = new Queue<GameObject>(); //A convenient queue for faces that are incident to faces already in the polycube
         //For each face in the cube...
         foreach (Transform face in cube.transform)
         {
@@ -176,6 +178,7 @@ public class PolyCube
                 c = MapOfFaces[PositionofIncidence].Parent;
                 c.RemoveFace(MapOfFaces[PositionofIncidence]);
 
+                //Remove the cube c if it has no faces left.
                 if (c.ListOfFaces.Count == 0)
                 {
                     MapOfCubes.Remove(PreciseVector.Vector3ToDecimalString(c.Cube.position, 1));
@@ -184,6 +187,12 @@ public class PolyCube
                 }
 
                 MapOfFaces.Remove(PositionofIncidence);
+                
+                //Remove all hinges that belong to this face from the map of hinges
+                foreach(Transform edge in faceToDestroy.Trans)
+                {
+                    OriginalHingePos.Remove(edge);
+                }
 
                 Object.Destroy(faceToDestroy.Trans.gameObject); //...then we destroy that face in the polycube
                 FacesToDestroy.Enqueue(face.gameObject); //then we queue the face from the cube we are checking for destruction.
@@ -226,6 +235,8 @@ public class PolyCube
             {
                 DualGraph.AddNeighbors(face.Trans, f.Trans);
                 //Debug.Log("Adjacent faces: " + f.Trans.name + " and " + face.Trans.name);
+
+                FindAdjacentEdges(face.Trans, f.Trans);
             }
         }
 
@@ -257,6 +268,8 @@ public class PolyCube
             {
                 //Debug.Log("Adjacent faces: " + f.Trans.name + " and " + current_face.Trans.name);
                 DualGraph.AddNeighbors(current_face.Trans, f.Trans);
+
+                FindAdjacentEdges(current_face.Trans, f.Trans);
             }
         }
         //Debug.Log("Check for neighbor's neighbor at " + (neighbor.Position + current_face.Trans.up));
@@ -278,6 +291,26 @@ public class PolyCube
             {
                 //Debug.Log("Adjacent faces: " + f.Trans.name + " and " + current_face.Trans.name);
                 DualGraph.AddNeighbors(current_face.Trans, f.Trans);
+
+                FindAdjacentEdges(current_face.Trans, f.Trans);
+            }
+        }
+    }
+
+    private void FindAdjacentEdges(Transform f_1, Transform f_2)
+    {
+        foreach (Transform hinge in f_1)
+        {
+            if (hinge.name == "edge")
+            {
+                foreach (Transform hinge_2 in f_2)
+                {
+                    if (hinge_2.name == "edge")
+                    {
+                        if (OriginalHingePos[hinge] == OriginalHingePos[hinge_2])
+                            DualGraph.SetNeighborHinges(hinge, hinge_2, OriginalHingePos[hinge]);
+                    }
+                }
             }
         }
     }

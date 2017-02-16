@@ -58,7 +58,7 @@ public class TestSystemScript : MonoBehaviour {
         //p.DumpMapOfCubes();
         //p.DumpMapOfFaces();
         p.BuildDualGraph();
-        //p.DumpAdjacency();
+        p.DumpAdjacency();
     }
 
     
