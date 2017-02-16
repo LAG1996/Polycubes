@@ -19,13 +19,28 @@ public class SingleCube {
         this.cube = cube;
     }
 
-    public void AddNewFace(Transform face)
+    public void AddNewFace(Transform face, ref Dictionary<Transform, string> HingeToPos)
     {
         ListOfFaces.Add(new SingleFace(this, this.position - face.position, face));
+        foreach(Transform edge in face)
+        {
+            if(edge.name == "edge")
+            {
+                HingeToPos.Add(edge, PreciseVector.Vector3ToDecimalString(edge.position, 1));
+            }
+        }
     }
-    public void AddNewFace(SingleFace face)
+    public void AddNewFace(SingleFace face, ref Dictionary<Transform, string> HingeToPos)
     {
         ListOfFaces.Add(face);
+
+        foreach (Transform edge in face.Trans)
+        {
+            if (edge.name == "edge")
+            {
+                HingeToPos.Add(edge, PreciseVector.Vector3ToDecimalString(edge.position, 1));
+            }
+        }
     }
 
     public void RemoveFace(SingleFace face)
