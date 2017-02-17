@@ -17,4 +17,9 @@ public class PreciseVector {
 
         return X + "," + Y + "," + Z;
     }
+
+    public static string FloatToDecimalString(float n, int precision)
+    {
+        return PreciseVector.SetPrecision(n, 1) + "";
+    }
 }

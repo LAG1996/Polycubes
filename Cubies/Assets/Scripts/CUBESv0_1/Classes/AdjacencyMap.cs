@@ -9,7 +9,7 @@ public class AdjacencyMap {
     //*******************
     private Dictionary<Transform, Node> Nodes;
     private Dictionary<string, List<Transform>> HingePair;
-    private List<AdjacencyMap> SubMaps;
+    private Dictionary<Transform, bool> IsActiveHinge;
 	//*******************
     //  CONSTRUCTOR
     //*******************
@@ -17,7 +17,7 @@ public class AdjacencyMap {
     {
         Nodes = new Dictionary<Transform, Node>();
         HingePair = new Dictionary<string, List<Transform>>();
-        SubMaps = new List<AdjacencyMap>();
+        IsActiveHinge = new Dictionary<Transform, bool>();
 	}
 
     public void AddNeighbors(Transform node, Transform neighbor)
@@ -41,20 +41,38 @@ public class AdjacencyMap {
     {
         if(!HingePair.ContainsKey(EdgePosition))
         {
-            Debug.Log(hinge_1.parent.name + "'s hinge and " + hinge_2.parent.name + "'s hinge at " + EdgePosition);
             List<Transform> E = new List<Transform>();
             E.Add(hinge_1);
             E.Add(hinge_2);
             HingePair.Add(EdgePosition, E);
+
+            IsActiveHinge.Add(hinge_1, true);
+            IsActiveHinge.Add(hinge_2, true);
         }  
     }
 
-    public void DisconnectFacesByEdge(string EdgePosition)
+    //Do a BFS of the adjacency map from face_1. Return if face_2 is found.
+    public bool InSameSubGraph(Transform face_1, Transform face_2)
+    {
+        return false;
+    }
+
+    public void DisconnectFacesByEdge(string EdgePosition, ref List<Transform> Path)
     {
         List<Transform> Pair = HingePair[EdgePosition];
+        
+        if(IsActiveHinge[Pair[0]])
+        {
+            Debug.Log("Disconnecting " + Pair[0].parent.name + " and " + Pair[1].parent.name);
+            Path.Add(Pair[0]);
 
-        Nodes[Pair[0].parent].RemoveNeighbor(Nodes[Pair[1]]);
-        Nodes[Pair[1].parent].RemoveNeighbor(Nodes[Pair[0]]);
+            IsActiveHinge[Pair[0]] = false;
+            IsActiveHinge[Pair[1]] = false;
+
+            Nodes[Pair[0].parent].RemoveNeighbor(Nodes[Pair[1].parent]);
+            Nodes[Pair[1].parent].RemoveNeighbor(Nodes[Pair[0].parent]);
+        }
+        
     }
 
     private void AddNewNode(Transform t)

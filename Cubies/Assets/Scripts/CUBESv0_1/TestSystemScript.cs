@@ -10,20 +10,37 @@ public class TestSystemScript : MonoBehaviour {
     public GameObject cube;
     public GameObject polycube;
     public float spacing;
+    public GameObject camcam;
     public List<Vector3> cubePositions = new List<Vector3>();
 
     //????????????????
     //  Private variables
     //????????????????
     private Dictionary<GameObject, PolyCube> PolyCubeObjectToPolyCube = new Dictionary<GameObject, PolyCube>();
-    private PolyCube p;
     private float scaling;
     bool _TriggerAddCube;
+    
+    private Control_Cam camcamScript;
 
-	// Use this for initialization
-	void Start ()
+    private bool pickedHinge = false;
+    private Transform rotationHinge = null;
+
+    private List<Transform> Cuts;
+
+    private enum State
     {
-        p = new PolyCube(cube.transform.lossyScale.x, spacing);
+        VIEW_MODE,
+        HINGE_MODE,
+        CUT_MODE,
+        UNFOLD_MODE
+    }
+    private State state = State.VIEW_MODE;
+    // Use this for initialization
+    void Start ()
+    {
+        Cuts = new List<Transform>();
+        camcamScript = camcam.GetComponent<Control_Cam>();
+        camcamScript.allowMove = false;
         BuildPolyCube();
     }
 	
@@ -44,11 +61,15 @@ public class TestSystemScript : MonoBehaviour {
         {
             _TriggerAddCube = false;
         }
+
+        _HandleKeyboard();
+        _HandleMouse();
     }
 
     void BuildPolyCube()
     {
         GameObject poly = Instantiate(polycube, transform);
+        PolyCube p = new PolyCube(cube.transform.lossyScale.x, spacing);
         foreach (Vector3 pos in cubePositions)
         {
             p.AddCube(pos, Instantiate(cube, pos, Quaternion.identity, poly.transform));
@@ -58,7 +79,7 @@ public class TestSystemScript : MonoBehaviour {
         //p.DumpMapOfCubes();
         //p.DumpMapOfFaces();
         p.BuildDualGraph();
-        p.DumpAdjacency();
+        //p.DumpAdjacency();
     }
 
     
@@ -68,5 +89,131 @@ public class TestSystemScript : MonoBehaviour {
         PolyCubeObjectToPolyCube.TryGetValue(poly, out n);
 
         return n;
+    }
+
+    void _HandleKeyboard()
+    {
+        if (state == State.VIEW_MODE)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (Cursor.lockState == CursorLockMode.None)
+                    Cursor.lockState = CursorLockMode.Locked;
+                else
+                    Cursor.lockState = CursorLockMode.None;
+                camcamScript.allowMove = !camcamScript.allowMove;
+            }
+        }
+        else if (state == State.HINGE_MODE)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && rotationHinge != null)
+            {
+                GetPolyCubeFromGameObject(rotationHinge.parent.parent.parent.gameObject).StartRotate();
+            }
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.A) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            state = State.HINGE_MODE;
+            Cursor.lockState = CursorLockMode.None;
+            camcamScript.allowMove = false;
+            Debug.Log(state);
+        }
+        else if (Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            state = State.UNFOLD_MODE;
+            Cursor.lockState = CursorLockMode.None;
+            camcamScript.allowMove = false;
+            Debug.Log(state);
+        }
+        else if (Input.GetKeyDown(KeyCode.D) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            state = State.CUT_MODE;
+            Cursor.lockState = CursorLockMode.None;
+            camcamScript.allowMove = false;
+            Debug.Log(state);
+        }
+        else if (Input.GetKeyDown(KeyCode.Q) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            state = State.VIEW_MODE;
+            Cursor.lockState = CursorLockMode.Locked;
+            camcamScript.allowMove = true;
+            Debug.Log(state);
+        }
+    }
+
+    void _HandleMouse()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+            Ray ray = camcam.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+                _HandleMouseClickOnState(hit.transform);
+            }
+        }
+    }
+
+    void _HandleMouseClickOnState(Transform trans)
+    {
+        switch (state)
+        {
+            case State.HINGE_MODE:
+                _HandleHingeMode(trans);
+                break;
+            default: break;
+        }
+    }
+
+    void _HandleHingeMode(Transform trans)
+    {
+        rotationHinge = trans;
+        if (trans.name == "edge")
+        {
+            PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
+            p.CutPolycube(trans, ref Cuts);
+            FormPerforation(p, Cuts[0], Cuts[Cuts.Count - 1]);
+            pickedHinge = true;
+        }
+    }
+
+    void FormPerforation(PolyCube p, Transform first_cut, Transform last_cut)
+    {
+        if (p.FindPerforation(first_cut, last_cut))
+        {
+            Debug.Log("Can form perforation");
+
+            WalkPathCuts();
+        }
+        else
+            Debug.Log("Cannot form perforation");
+    }
+
+    void WalkPathCuts()
+    {
+        if((Cuts[0].position - Cuts[Cuts.Count - 1].position).normalized == Cuts[0].right)
+        {
+            //Start walking right
+            Debug.Log("Right");
+        }
+        else if((Cuts[0].position - Cuts[Cuts.Count - 1].position).normalized == -Cuts[0].right)
+        {
+            //Start walking left
+            Debug.Log("Left");
+        }
+        else if ((Cuts[0].position - Cuts[Cuts.Count - 1].position).normalized == Cuts[0].up)
+        {
+            //Start walking up
+            Debug.Log("Up");
+        }
+        else if ((Cuts[0].position - Cuts[Cuts.Count - 1].position).normalized == -Cuts[0].up)
+        {
+            //Start walking down
+            Debug.Log("Down");
+        }
+
     }
 }

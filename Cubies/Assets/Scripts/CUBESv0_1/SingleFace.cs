@@ -18,9 +18,7 @@ public class SingleFace {
         ParentCube = parent;
         this.localPosition = localPosition;
         latticePosition = face.position;
-        this.face = face;
-
-        
+        this.face = face;   
     }
 
     public SingleFace(Vector3 localPosition, Transform face)

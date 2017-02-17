@@ -110,6 +110,37 @@ public class PolyCube
        }
     }
 
+    public void CutPolycube(Transform edge, ref List<Transform> Path)
+    {
+        DualGraph.DisconnectFacesByEdge(OriginalHingePos[edge], ref Path);
+    }
+
+    public bool FindPerforation(Transform endPoint_1, Transform endPoint_2)
+    {
+        if((endPoint_1.position - endPoint_2.position).normalized == endPoint_1.forward
+            || (endPoint_1.position - endPoint_2.position).normalized == -endPoint_1.forward)
+            return false;
+
+        return Diff(OriginalHingePos[endPoint_1], OriginalHingePos[endPoint_2]) == 1;
+    }
+
+    private int Diff(string endPoint_1, string endPoint_2)
+    {
+        int diff_count = 0;
+        string []e1 = endPoint_1.Split(',');
+        string[] e2 = endPoint_2.Split(',');
+
+            for(int j = 0; j < 3; j++)
+            {
+                if(e1[j] != e2[j])
+                {
+                    diff_count++;
+                }
+            }
+
+        return diff_count;
+    }
+
     public int GetCubeCount()
     {
         return cubeCount;

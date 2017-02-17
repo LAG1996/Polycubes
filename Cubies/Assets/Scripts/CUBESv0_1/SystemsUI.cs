@@ -12,6 +12,8 @@ public class SystemsUI : MonoBehaviour {
     private bool pickedHinge = false;
     private Transform rotationHinge = null;
 
+    private List<Transform> Cuts;
+
     private enum State {
         VIEW_MODE,
         HINGE_MODE,
@@ -25,6 +27,8 @@ public class SystemsUI : MonoBehaviour {
         camcamScript.allowMove = false;
 
         systemScript = gameObject.GetComponent<TestSystemScript>();
+
+        Cuts = new List<Transform>();
 
         Debug.Log(state);
     }
@@ -118,18 +122,28 @@ public class SystemsUI : MonoBehaviour {
         rotationHinge = trans;
         if(trans.name == "edge")
         {
-            Debug.Log(trans.parent.parent);
-            systemScript.GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject).SetRotationEdge(trans, pickedHinge);
+            PolyCube p = systemScript.GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
+            Cuts.Add(trans);
+
+            FormPerforation(p, Cuts[0], Cuts[Cuts.Count - 1]);
             pickedHinge = true;
-            Debug.Log("Children?");
         }
-        else if(trans.name == "body")
+    }
+
+    void FormPerforation(PolyCube p, Transform first_cut, Transform last_cut)
+    {
+        if(p.FindPerforation(first_cut, last_cut))
         {
-            systemScript.GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject).ReparentFace(trans);
+            Debug.Log("Can form perforation");
+
+            WalkPathCuts();
         }
         else
-        {
-            Debug.Log("Something's wrong: " + name);
-        }
+            Debug.Log("Cannot form perforation");
+    }
+
+    void WalkPathCuts()
+    {
+
     }
 }
