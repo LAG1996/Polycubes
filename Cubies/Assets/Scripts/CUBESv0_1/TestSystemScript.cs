@@ -182,14 +182,14 @@ public class TestSystemScript : MonoBehaviour {
 
     void FormPerforation(PolyCube p, Transform first_cut, Transform last_cut)
     {
+        /*
         if (p.FindPerforation(first_cut, last_cut))
         {
             Debug.Log("Can form perforation");
-
-            WalkPathCuts();
+            //WalkPathCuts();
         }
         else
-            Debug.Log("Cannot form perforation");
+            Debug.Log("Cannot form perforation");*/
     }
 
     void WalkPathCuts()

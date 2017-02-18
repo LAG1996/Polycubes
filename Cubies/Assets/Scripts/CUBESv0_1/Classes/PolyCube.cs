@@ -110,19 +110,148 @@ public class PolyCube
        }
     }
 
-    public void CutPolycube(Transform edge, ref List<Transform> Path)
+    public void CutPolycube(Transform NewCut, ref List<Transform> Path)
     {
-        DualGraph.DisconnectFacesByEdge(OriginalHingePos[edge], ref Path);
+        if(Path.Count > 0)
+        {
+            if (IsValidCut(OriginalHingePos[NewCut], OriginalHingePos[Path[Path.Count - 1]]))
+            {
+                DualGraph.DisconnectFacesByEdge(OriginalHingePos[NewCut], ref Path);
+            }
+            else
+            {
+                Debug.Log("Nope can't disconnect");
+            }
+        }
+        else
+            DualGraph.DisconnectFacesByEdge(OriginalHingePos[NewCut], ref Path);
+        
+        
+        
+       
+    }
+    private bool IsValidCut(string NCutCenter, string LCutCenter)
+    {
+        Vector3 LCUTC = PreciseVector.StringToVector3(LCutCenter);
+        Vector3 RCUTC = PreciseVector.StringToVector3(NCutCenter);
+        //Need to check if the new cut is immediately adjacent to the last cut
+        string dir = GetEdgeDirection(LCUTC, RCUTC);
+        Debug.Log(dir);
+
+        if (dir != "OUT_OF_BOUNDS")
+            return true;
+        return false;
     }
 
-    public bool FindPerforation(Transform endPoint_1, Transform endPoint_2)
+    //In this function, we get a string that denotes the direction one edge is from another.
+    //To keep generality, we use global space, making the "direction" independent of the polycube's global rotation.
+    //Also, if two edges are not immediately next to each other, return "OUT_OF_BOUNDS".
+    //We know to edges are not immediately next to each other if the magnitude between them is > 1.
+    private string GetEdgeDirection(Vector3 Place, Vector3 NextPlace)
+    {
+        Vector3 Direction = NextPlace - Place;
+        if ((int)(Direction.magnitude) > 1)
+            return "OUT_OF_BOUNDS";
+
+        Debug.Log("Vector between them: " + Direction);
+
+        if(Direction == Vector3.up)
+        {
+            return "UP";
+        }
+        if (Direction == Vector3.down)
+        {
+            return "DOWN";
+        }
+        if(Direction == Vector3.right)
+        {
+            return "RIGHT";
+        }
+        if(Direction == Vector3.left)
+        {
+            return "LEFT";
+        }
+        if (Direction == Vector3.forward)
+        {
+            return "FORWARD";
+        }
+        if (Direction == Vector3.back)
+        {
+            return "BACK";
+        }
+
+        //Check for combinations of vertical-horizontal movement and horizontal-vertical movement
+        if (Direction == Vector3.right*.5f + Vector3.up*.5f)
+        {
+            return "UP_RIGHT";
+        }
+        if(Direction == Vector3.right * .5f + Vector3.down * .5f)
+        {
+            return "DOWN_RIGHT";
+        }
+        if(Direction == Vector3.right * .5f + Vector3.forward * .5f)
+        {
+            return "FORWARD_RIGHT";
+        }
+        if(Direction == Vector3.right * .5f + Vector3.back * .5f)
+        {
+            return "BACK_RIGHT";
+        }
+        if (Direction == Vector3.left * .5f + Vector3.up * .5f)
+        {
+            return "UP_LEFT";
+        }
+        if(Direction == Vector3.left * .5f + Vector3.down * .5f)
+        {
+            return "DOWN_LEFT";
+        }
+        if(Direction == Vector3.left * .5f + Vector3.forward * .5f)
+        {
+            return "FORWARD_LEFT";
+        }
+        if(Direction == Vector3.left * .5f + Vector3.back * .5f)
+        {
+            return "BACK_LEFT";
+        }
+
+        //Check for combinations of forward and vertical movement
+        if (Direction == Vector3.up * .5f + Vector3.forward * .5f)
+        {
+            return "UP_FORWARD";
+        }
+        if (Direction == Vector3.up * .5f + Vector3.back * .5f)
+        {
+            return "UP_BACK";
+        }
+        if (Direction == Vector3.down * .5f + Vector3.forward * .5f)
+        {
+            return "DOWN_FORWARD";
+        }
+        if (Direction == Vector3.down * .5f + Vector3.back * .5f)
+        {
+            return "DOWN_BACK";
+        }
+
+
+        return "INVALID";
+    }
+
+    /*
+    //Attempts to create a perforation (that is, an edge to rotate faces around)
+    //If successful, returns "SUCCESS". If not, it gives an error explaining why
+    public string FindPerforation(Transform endPoint_1, Transform endPoint_2)
     {
         if((endPoint_1.position - endPoint_2.position).normalized == endPoint_1.forward
             || (endPoint_1.position - endPoint_2.position).normalized == -endPoint_1.forward)
-            return false;
+            return "COLLINEAR";
 
-        return Diff(OriginalHingePos[endPoint_1], OriginalHingePos[endPoint_2]) == 1;
-    }
+        if(Diff(OriginalHingePos[endPoint_1], OriginalHingePos[endPoint_2]) == 1)
+        {
+            //Even if they are aligned, the path leading to the cuts may cause them to be
+            //Invalid endpoints. We need to check the cut succeeding the first, and then the
+            //cut preceding it to decide if the path cut out is valid.
+        }
+    }*/
 
     private int Diff(string endPoint_1, string endPoint_2)
     {
