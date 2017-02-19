@@ -20,7 +20,6 @@ public class PreciseVector {
 
     public static Vector3 StringToVector3(string vector)
     {
-        Debug.Log("String of vec: " + vector);
         string [] vectorPieces = vector.Split(',');
         Vector3 vec = Vector3.zero;
 
@@ -40,7 +39,6 @@ public class PreciseVector {
                     continue;
                 }
 
-                Debug.Log((int)digit - 48 + " : " + digit);
                 if (i == 0)
                 {
                     vec.x += (float)(((int)digit - 48) * Mathf.Pow(10, tens_place));
@@ -60,7 +58,6 @@ public class PreciseVector {
             }
 
             char tenth = splitWholeFromDec[1][0];
-            Debug.Log("." + tenth);
             if (i == 0)
             {
                 vec.x += (float)(((int)tenth - 48) / 10.0f);
@@ -87,8 +84,6 @@ public class PreciseVector {
             }
             
         }
-
-        Debug.Log("Resulting vector: " + vec);
 
         return vec;
     }

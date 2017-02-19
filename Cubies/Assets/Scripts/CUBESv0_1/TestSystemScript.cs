@@ -175,21 +175,20 @@ public class TestSystemScript : MonoBehaviour {
         {
             PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
             p.CutPolycube(trans, ref Cuts);
-            FormPerforation(p, Cuts[0], Cuts[Cuts.Count - 1]);
+            FormPerforation(p, Cuts);
             pickedHinge = true;
         }
     }
 
-    void FormPerforation(PolyCube p, Transform first_cut, Transform last_cut)
+    void FormPerforation(PolyCube p, List<Transform> CPath)
     {
-        /*
-        if (p.FindPerforation(first_cut, last_cut))
+        if (p.CanFormPerf(CPath))
         {
             Debug.Log("Can form perforation");
             //WalkPathCuts();
         }
         else
-            Debug.Log("Cannot form perforation");*/
+            Debug.Log("Cannot form perforation");
     }
 
     void WalkPathCuts()

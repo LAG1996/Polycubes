@@ -57,6 +57,25 @@ public class AdjacencyMap {
         return false;
     }
 
+    public bool EdgesOnSameNormal(string hinge_1, string hinge_2, out Vector3 normal)
+    {
+        List<Transform> pair_1 = HingePair[hinge_1];
+        List<Transform> pair_2 = HingePair[hinge_2];
+
+
+        for (int i = 0; i < 2; i++)
+            for (int j = 0; j < 2; j++)
+            {
+                if (pair_1[i].parent.up == pair_2[j].parent.up)
+                {
+                    normal = pair_1[i].parent.up;
+                    return true;
+                }
+            }
+        normal = Vector3.zero;
+        return false;
+    }
+
     public void DisconnectFacesByEdge(string EdgePosition, ref List<Transform> Path)
     {
         List<Transform> Pair = HingePair[EdgePosition];

@@ -13,7 +13,8 @@ public class PolyCube
     ************************************/
     private Dictionary<string, SingleFace> MapOfFaces = new Dictionary<string, SingleFace>();
     private Dictionary<string, SingleCube> MapOfCubes = new Dictionary<string, SingleCube>();
-    private Dictionary<Transform, string> OriginalHingePos = new Dictionary<Transform, string>(); 
+    private Dictionary<Transform, string> OriginalHingePos = new Dictionary<Transform, string>();
+    private List<List<string>> Cut_Path;
 
     private AdjacencyMap DualGraph = new AdjacencyMap();
 
@@ -36,6 +37,7 @@ public class PolyCube
         _SPACING = spacing;
         cubeCount = 0;
         faceCount = 0;
+        Cut_Path = new List<List<string>>();
     }
 
     
@@ -110,13 +112,31 @@ public class PolyCube
        }
     }
 
+    //Input: Gets the transform of whatever hinge the user clicked on in their "cut" and the path that they are currently cutting around.
+    //Description: Figures out if the next cut in the given path is a valid cut, and then adds the cut to the path if it is valid.
+    //A new cut is valid if it is adjacent to the last cut in the path.
     public void CutPolycube(Transform NewCut, ref List<Transform> Path)
-    {
-        if(Path.Count > 0)
+    {   
+        //If the Path's length is greater than zero, then it already has at least one cut in it, so we need to check
+        //for valid cuts (cuts are adjacent).
+        if (Path.Count > 0)
         {
-            if (IsValidCut(OriginalHingePos[NewCut], OriginalHingePos[Path[Path.Count - 1]]))
+            Vector3 NCUTC = PreciseVector.StringToVector3(OriginalHingePos[NewCut]);
+            Vector3 LCUTC = PreciseVector.StringToVector3(OriginalHingePos[Path[Path.Count - 1]]);
+            if (AreAdjacentCuts(NCUTC, LCUTC))
             {
                 DualGraph.DisconnectFacesByEdge(OriginalHingePos[NewCut], ref Path);
+
+                if(Cut_Path.Count == 0 || Path.Count == 2)
+                {
+                    List<string> path = new List<string>();
+                    path.Add(GetEdgeDirection(NCUTC - LCUTC));
+                    Cut_Path.Add(path);
+                }
+                else
+                {
+                    Cut_Path[Cut_Path.Count - 1].Add(GetEdgeDirection(NCUTC - LCUTC));
+                }
             }
             else
             {
@@ -130,14 +150,15 @@ public class PolyCube
         
        
     }
-    private bool IsValidCut(string NCutCenter, string LCutCenter)
+    //Input: Two ordered 3-tuples that represent two edges of a graph.
+    //Output: Whether the edges are adjacent (they have like endpoints and are not equivalent).
+    private bool AreAdjacentCuts(Vector3 NCutCenter, Vector3 LCutCenter)
     {
-        Vector3 LCUTC = PreciseVector.StringToVector3(LCutCenter);
-        Vector3 RCUTC = PreciseVector.StringToVector3(NCutCenter);
+        
         //Need to check if the new cut is immediately adjacent to the last cut
-        string dir = GetEdgeDirection(LCUTC, RCUTC);
+        Vector3 Dir = NCutCenter - LCutCenter;
+        string dir = GetEdgeDirection(Dir);
         Debug.Log(dir);
-
         if (dir != "OUT_OF_BOUNDS")
             return true;
         return false;
@@ -147,13 +168,10 @@ public class PolyCube
     //To keep generality, we use global space, making the "direction" independent of the polycube's global rotation.
     //Also, if two edges are not immediately next to each other, return "OUT_OF_BOUNDS".
     //We know to edges are not immediately next to each other if the magnitude between them is > 1.
-    private string GetEdgeDirection(Vector3 Place, Vector3 NextPlace)
+    private string GetEdgeDirection(Vector3 Direction)
     {
-        Vector3 Direction = NextPlace - Place;
         if ((int)(Direction.magnitude) > 1)
             return "OUT_OF_BOUNDS";
-
-        Debug.Log("Vector between them: " + Direction);
 
         if(Direction == Vector3.up)
         {
@@ -236,22 +254,99 @@ public class PolyCube
         return "INVALID";
     }
 
-    /*
     //Attempts to create a perforation (that is, an edge to rotate faces around)
-    //If successful, returns "SUCCESS". If not, it gives an error explaining why
-    public string FindPerforation(Transform endPoint_1, Transform endPoint_2)
-    {
-        if((endPoint_1.position - endPoint_2.position).normalized == endPoint_1.forward
-            || (endPoint_1.position - endPoint_2.position).normalized == -endPoint_1.forward)
-            return "COLLINEAR";
+    //If successful, returns true.
+    //There are multiple checks that have to be made based on multiple cases:
+    /* 
+     * Check if first and last cuts are adjacent.
+     *              -If yes: return FALSE. No perforation can be formed because there is no space between them.
+     *              -If not: Another check must be made.
+     *                  Traverse the cut path. 
+     *                  -If traversal does not change directions (in other words, all we have been doing was trailing a line),
+     *                  then return FALSE. No perforation can be formed because there is no material to fold around.
+     *                  -Otherwise, another check must be made.
+     *                      Define the possible perforation to be an infinite line containing the perforation's endpoints.
+     *                      Also, define the half-spaces H1 and H2 to be the half-spaces formed by the plane PERF, where its axes are
+     *                      the axes tangential to the face it is residing on.
+     *                      Then traverse the cut path.
+     *                          -If the cut path never crosses half-spaces, then we don't need to worry. This is a valid cut path. Return TRUE.
+     *                          -If the cut path crosses half-spaces, we have to consider multiple cases.
+     *                              Continue traversing the cut path. If the cut path "changes normals" (i.e., cuts through edges whose faces have different
+     *                              normals than the faces of our first and last cuts) and the faces we are cutting through are "behind" the faces pertaining
+     *                              to our first and last cuts, then check if the cut path ever reaches end of the polycube.
+     *                              -If not, return FALSE since the faces we wish to rotate would just crash into other faces.
+     *                              -If it does, return TRUE, since there would be no collision.
+     *                              
+     *                              -ALSO, if the cut path does not "change normals", then return FALSE since unfolding would cause faces to become incident.
+     * 
+     * 
+     */
 
-        if(Diff(OriginalHingePos[endPoint_1], OriginalHingePos[endPoint_2]) == 1)
+    public bool CanFormPerf(List<Transform> Path)
+    {
+        if (Path.Count <= 2)
         {
-            //Even if they are aligned, the path leading to the cuts may cause them to be
-            //Invalid endpoints. We need to check the cut succeeding the first, and then the
-            //cut preceding it to decide if the path cut out is valid.
+            return false;
         }
-    }*/
+        if (IsCollinear(PreciseVector.StringToVector3(OriginalHingePos[Path[0]]), PreciseVector.StringToVector3(OriginalHingePos[Path[Path.Count - 1]])))
+        {
+            Debug.Log("Collinear");
+            return false;
+        }
+
+        Vector3 commonNorm;
+        if(DualGraph.EdgesOnSameNormal(OriginalHingePos[Path[0]], OriginalHingePos[Path[Path.Count - 1]], out commonNorm))
+        {
+            Debug.Log("Same normal...");
+            Vector3 pos_1 = PreciseVector.StringToVector3(OriginalHingePos[Path[0]]);
+            Vector3 pos_2 = PreciseVector.StringToVector3(OriginalHingePos[Path[Path.Count - 1]]);
+
+            if(commonNorm.x == 1.0f)
+            {
+                if((pos_1.x - pos_2.x) != 0.0f)
+                {
+                    return false;
+                }
+            }
+            else if (commonNorm.y == 1.0f)
+            {
+                if ((pos_1.y - pos_2.y) != 0.0f)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if ((pos_1.z - pos_2.z) != 0.0f)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool IsCollinear(Vector3 point_1, Vector3 point_2)
+    {
+        string Dir = GetEdgeDirection((point_2 - point_1).normalized);
+
+        Debug.Log(Dir);
+
+        //Checks if two edges are collinear
+        List<string> CurPath = Cut_Path[Cut_Path.Count - 1];
+        int CurPathCount = CurPath.Count;
+        bool DirChanged = false;
+        for(int i = 0; i < CurPathCount; i++)
+        {
+            if (CurPath[0] != Dir)
+                DirChanged = true;
+        }
+
+        return !DirChanged;
+    }
 
     private int Diff(string endPoint_1, string endPoint_2)
     {
