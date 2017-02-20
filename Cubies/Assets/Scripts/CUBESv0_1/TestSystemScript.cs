@@ -79,6 +79,7 @@ public class TestSystemScript : MonoBehaviour {
         //p.DumpMapOfCubes();
         //p.DumpMapOfFaces();
         p.BuildDualGraph();
+        //p.DumpMapOfEdges();
         //p.DumpAdjacency();
     }
 
@@ -174,15 +175,15 @@ public class TestSystemScript : MonoBehaviour {
         if (trans.name == "edge")
         {
             PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
-            p.CutPolycube(trans, ref Cuts);
-            FormPerforation(p, Cuts);
+            p.CutPolyCube(trans);
+            FormPerforation(p);
             pickedHinge = true;
         }
     }
 
-    void FormPerforation(PolyCube p, List<Transform> CPath)
+    void FormPerforation(PolyCube p)
     {
-        if (p.CanFormPerf(CPath))
+        if (p.CanFormPerf())
         {
             Debug.Log("Can form perforation");
             //WalkPathCuts();

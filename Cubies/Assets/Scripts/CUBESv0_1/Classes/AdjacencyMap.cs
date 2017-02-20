@@ -8,16 +8,12 @@ public class AdjacencyMap {
     //  PRIVATE VARS
     //*******************
     private Dictionary<Transform, Node> Nodes;
-    private Dictionary<string, List<Transform>> HingePair;
-    private Dictionary<Transform, bool> IsActiveHinge;
 	//*******************
     //  CONSTRUCTOR
     //*******************
 	public AdjacencyMap ()
     {
         Nodes = new Dictionary<Transform, Node>();
-        HingePair = new Dictionary<string, List<Transform>>();
-        IsActiveHinge = new Dictionary<Transform, bool>();
 	}
 
     public void AddNeighbors(Transform node, Transform neighbor)
@@ -37,56 +33,21 @@ public class AdjacencyMap {
         
     }
 
-    public void SetNeighborHinges(Transform hinge_1, Transform hinge_2, string EdgePosition)
-    {
-        if(!HingePair.ContainsKey(EdgePosition))
-        {
-            List<Transform> E = new List<Transform>();
-            E.Add(hinge_1);
-            E.Add(hinge_2);
-            HingePair.Add(EdgePosition, E);
-
-            IsActiveHinge.Add(hinge_1, true);
-            IsActiveHinge.Add(hinge_2, true);
-        }  
-    }
-
     //Do a BFS of the adjacency map from face_1. Return if face_2 is found.
     public bool InSameSubGraph(Transform face_1, Transform face_2)
     {
         return false;
     }
 
-    public bool EdgesOnSameNormal(string hinge_1, string hinge_2, out Vector3 normal)
+    public void DisconnectFacesByEdge(Transform hinge, HingeMap HM)
     {
-        List<Transform> pair_1 = HingePair[hinge_1];
-        List<Transform> pair_2 = HingePair[hinge_2];
-
-
-        for (int i = 0; i < 2; i++)
-            for (int j = 0; j < 2; j++)
-            {
-                if (pair_1[i].parent.up == pair_2[j].parent.up)
-                {
-                    normal = pair_1[i].parent.up;
-                    return true;
-                }
-            }
-        normal = Vector3.zero;
-        return false;
-    }
-
-    public void DisconnectFacesByEdge(string EdgePosition, ref List<Transform> Path)
-    {
-        List<Transform> Pair = HingePair[EdgePosition];
+        List<Transform> Pair = HM.GetHingePair(hinge);
         
-        if(IsActiveHinge[Pair[0]])
+        if(HM.GetEdgeState(hinge) == "UNTOUCHED")
         {
             Debug.Log("Disconnecting " + Pair[0].parent.name + " and " + Pair[1].parent.name);
-            Path.Add(Pair[0]);
 
-            IsActiveHinge[Pair[0]] = false;
-            IsActiveHinge[Pair[1]] = false;
+            HM.SetEdgeState("CUT", hinge);
 
             Nodes[Pair[0].parent].RemoveNeighbor(Nodes[Pair[1].parent]);
             Nodes[Pair[1].parent].RemoveNeighbor(Nodes[Pair[0].parent]);

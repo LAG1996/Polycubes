@@ -14,9 +14,10 @@ public class PolyCube
     private Dictionary<string, SingleFace> MapOfFaces = new Dictionary<string, SingleFace>();
     private Dictionary<string, SingleCube> MapOfCubes = new Dictionary<string, SingleCube>();
     private Dictionary<Transform, string> OriginalHingePos = new Dictionary<Transform, string>();
-    private List<List<string>> Cut_Path;
+    private List<Transform> CutHeads;
 
     private AdjacencyMap DualGraph = new AdjacencyMap();
+    private HingeMap EdgeGraph = new HingeMap();
 
     private Queue<SingleFace> FacesToParent = new Queue<SingleFace>();
     private Transform RotateEdge;
@@ -37,7 +38,7 @@ public class PolyCube
         _SPACING = spacing;
         cubeCount = 0;
         faceCount = 0;
-        Cut_Path = new List<List<string>>();
+        CutHeads = new List<Transform>();
     }
 
     
@@ -115,27 +116,28 @@ public class PolyCube
     //Input: Gets the transform of whatever hinge the user clicked on in their "cut" and the path that they are currently cutting around.
     //Description: Figures out if the next cut in the given path is a valid cut, and then adds the cut to the path if it is valid.
     //A new cut is valid if it is adjacent to the last cut in the path.
+    /*
     public void CutPolycube(Transform NewCut, ref List<Transform> Path)
-    {   
+    {
         //If the Path's length is greater than zero, then it already has at least one cut in it, so we need to check
         //for valid cuts (cuts are adjacent).
+        Debug.Log("Checking if cut is valid...");
         if (Path.Count > 0)
         {
-            Vector3 NCUTC = PreciseVector.StringToVector3(OriginalHingePos[NewCut]);
-            Vector3 LCUTC = PreciseVector.StringToVector3(OriginalHingePos[Path[Path.Count - 1]]);
-            if (AreAdjacentCuts(NCUTC, LCUTC))
+            if (EdgeGraph.AreAdjacentEdges(NewCut, Path[Path.Count - 1]))
             {
-                DualGraph.DisconnectFacesByEdge(OriginalHingePos[NewCut], ref Path);
+                DualGraph.DisconnectFacesByEdge(NewCut, ref Path, EdgeGraph);
+                EdgeGraph.AddNewCut(NewCut);
 
                 if(Cut_Path.Count == 0 || Path.Count == 2)
                 {
                     List<string> path = new List<string>();
-                    path.Add(GetEdgeDirection(NCUTC - LCUTC));
+                    path.Add(EdgeGraph.GetEdgeDirection(NewCut, Path[Path.Count - 1]));
                     Cut_Path.Add(path);
                 }
                 else
                 {
-                    Cut_Path[Cut_Path.Count - 1].Add(GetEdgeDirection(NCUTC - LCUTC));
+                    Cut_Path[Cut_Path.Count - 1].Add(EdgeGraph.GetEdgeDirection(NewCut, Path[Path.Count - 1]));
                 }
             }
             else
@@ -144,114 +146,20 @@ public class PolyCube
             }
         }
         else
-            DualGraph.DisconnectFacesByEdge(OriginalHingePos[NewCut], ref Path);
-        
-        
-        
-       
-    }
-    //Input: Two ordered 3-tuples that represent two edges of a graph.
-    //Output: Whether the edges are adjacent (they have like endpoints and are not equivalent).
-    private bool AreAdjacentCuts(Vector3 NCutCenter, Vector3 LCutCenter)
+            DualGraph.DisconnectFacesByEdge(NewCut, ref Path, EdgeGraph);
+
+        Debug.Log("Done checking");
+    }*/
+
+    public void CutPolyCube(Transform NewCut)
     {
-        
-        //Need to check if the new cut is immediately adjacent to the last cut
-        Vector3 Dir = NCutCenter - LCutCenter;
-        string dir = GetEdgeDirection(Dir);
-        Debug.Log(dir);
-        if (dir != "OUT_OF_BOUNDS")
-            return true;
-        return false;
-    }
+        DualGraph.DisconnectFacesByEdge(NewCut, EdgeGraph);
+        EdgeGraph.AddNewCut(NewCut);
 
-    //In this function, we get a string that denotes the direction one edge is from another.
-    //To keep generality, we use global space, making the "direction" independent of the polycube's global rotation.
-    //Also, if two edges are not immediately next to each other, return "OUT_OF_BOUNDS".
-    //We know to edges are not immediately next to each other if the magnitude between them is > 1.
-    private string GetEdgeDirection(Vector3 Direction)
-    {
-        if ((int)(Direction.magnitude) > 1)
-            return "OUT_OF_BOUNDS";
-
-        if(Direction == Vector3.up)
+        if(EdgeGraph.CutIsHead(NewCut))
         {
-            return "UP";
+            Debug.Log("Head of New Cut!");
         }
-        if (Direction == Vector3.down)
-        {
-            return "DOWN";
-        }
-        if(Direction == Vector3.right)
-        {
-            return "RIGHT";
-        }
-        if(Direction == Vector3.left)
-        {
-            return "LEFT";
-        }
-        if (Direction == Vector3.forward)
-        {
-            return "FORWARD";
-        }
-        if (Direction == Vector3.back)
-        {
-            return "BACK";
-        }
-
-        //Check for combinations of vertical-horizontal movement and horizontal-vertical movement
-        if (Direction == Vector3.right*.5f + Vector3.up*.5f)
-        {
-            return "UP_RIGHT";
-        }
-        if(Direction == Vector3.right * .5f + Vector3.down * .5f)
-        {
-            return "DOWN_RIGHT";
-        }
-        if(Direction == Vector3.right * .5f + Vector3.forward * .5f)
-        {
-            return "FORWARD_RIGHT";
-        }
-        if(Direction == Vector3.right * .5f + Vector3.back * .5f)
-        {
-            return "BACK_RIGHT";
-        }
-        if (Direction == Vector3.left * .5f + Vector3.up * .5f)
-        {
-            return "UP_LEFT";
-        }
-        if(Direction == Vector3.left * .5f + Vector3.down * .5f)
-        {
-            return "DOWN_LEFT";
-        }
-        if(Direction == Vector3.left * .5f + Vector3.forward * .5f)
-        {
-            return "FORWARD_LEFT";
-        }
-        if(Direction == Vector3.left * .5f + Vector3.back * .5f)
-        {
-            return "BACK_LEFT";
-        }
-
-        //Check for combinations of forward and vertical movement
-        if (Direction == Vector3.up * .5f + Vector3.forward * .5f)
-        {
-            return "UP_FORWARD";
-        }
-        if (Direction == Vector3.up * .5f + Vector3.back * .5f)
-        {
-            return "UP_BACK";
-        }
-        if (Direction == Vector3.down * .5f + Vector3.forward * .5f)
-        {
-            return "DOWN_FORWARD";
-        }
-        if (Direction == Vector3.down * .5f + Vector3.back * .5f)
-        {
-            return "DOWN_BACK";
-        }
-
-
-        return "INVALID";
     }
 
     //Attempts to create a perforation (that is, an edge to rotate faces around)
@@ -282,88 +190,28 @@ public class PolyCube
      * 
      */
 
-    public bool CanFormPerf(List<Transform> Path)
+    public bool CanFormPerf()
     {
-        if (Path.Count <= 2)
+        if (EdgeGraph.GetCutCount() <= 2)
         {
             return false;
         }
+        /*
         if (IsCollinear(PreciseVector.StringToVector3(OriginalHingePos[Path[0]]), PreciseVector.StringToVector3(OriginalHingePos[Path[Path.Count - 1]])))
         {
             Debug.Log("Collinear");
             return false;
         }
 
-        Vector3 commonNorm;
-        if(DualGraph.EdgesOnSameNormal(OriginalHingePos[Path[0]], OriginalHingePos[Path[Path.Count - 1]], out commonNorm))
+        if(EdgeGraph.EdgesOnSamePlane(Path[0], Path[Path.Count - 1]))
         {
-            Debug.Log("Same normal...");
-            Vector3 pos_1 = PreciseVector.StringToVector3(OriginalHingePos[Path[0]]);
-            Vector3 pos_2 = PreciseVector.StringToVector3(OriginalHingePos[Path[Path.Count - 1]]);
-
-            if(commonNorm.x == 1.0f)
-            {
-                if((pos_1.x - pos_2.x) != 0.0f)
-                {
-                    return false;
-                }
-            }
-            else if (commonNorm.y == 1.0f)
-            {
-                if ((pos_1.y - pos_2.y) != 0.0f)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if ((pos_1.z - pos_2.z) != 0.0f)
-                {
-                    return false;
-                }
-            }
-
             return true;
-        }
+        }*/
 
-        return false;
+        return true;
     }
 
-    private bool IsCollinear(Vector3 point_1, Vector3 point_2)
-    {
-        string Dir = GetEdgeDirection((point_2 - point_1).normalized);
-
-        Debug.Log(Dir);
-
-        //Checks if two edges are collinear
-        List<string> CurPath = Cut_Path[Cut_Path.Count - 1];
-        int CurPathCount = CurPath.Count;
-        bool DirChanged = false;
-        for(int i = 0; i < CurPathCount; i++)
-        {
-            if (CurPath[0] != Dir)
-                DirChanged = true;
-        }
-
-        return !DirChanged;
-    }
-
-    private int Diff(string endPoint_1, string endPoint_2)
-    {
-        int diff_count = 0;
-        string []e1 = endPoint_1.Split(',');
-        string[] e2 = endPoint_2.Split(',');
-
-            for(int j = 0; j < 3; j++)
-            {
-                if(e1[j] != e2[j])
-                {
-                    diff_count++;
-                }
-            }
-
-        return diff_count;
-    }
+    
 
     public int GetCubeCount()
     {
@@ -397,6 +245,11 @@ public class PolyCube
             Debug.Log(MapOfFaces[key].Trans.name + " : " + key);
         }
         Debug.Log("--------END MAP OF FACES-------");
+    }
+
+    public void DumpMapOfEdges()
+    {
+        EdgeGraph.EdgeDump();
     }
 
     //Removes incident faces
@@ -563,7 +416,7 @@ public class PolyCube
                     if (hinge_2.name == "edge")
                     {
                         if (OriginalHingePos[hinge] == OriginalHingePos[hinge_2])
-                            DualGraph.SetNeighborHinges(hinge, hinge_2, OriginalHingePos[hinge]);
+                            EdgeGraph.SetEdge(hinge, hinge_2, PreciseVector.StringToVector3(OriginalHingePos[hinge]));
                     }
                 }
             }
