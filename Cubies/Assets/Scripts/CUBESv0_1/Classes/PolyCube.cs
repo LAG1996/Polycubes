@@ -22,6 +22,9 @@ public class PolyCube
     private Queue<SingleFace> FacesToParent = new Queue<SingleFace>();
     private Transform RotateEdge;
     private Queue<Transform> FacesToRotate = new Queue<Transform>();
+    private Dictionary<Transform, Material> PaintedHinges = new Dictionary<Transform, Material>();
+    private List<Transform> CutHinges = new List<Transform>();
+    private List<Transform> CannotCut = new List<Transform>();
 
     private float _CUBE_SCALE;
     private float _SPACING;
@@ -105,6 +108,24 @@ public class PolyCube
         }
     }
 
+    public void Repaint(Material DefaultMaterial, Material CutMaterial, Material InvalidCutMaterial)
+    {
+        foreach(Transform C in OriginalHingePos.Keys)
+        {
+            C.GetComponent<Renderer>().material = DefaultMaterial;
+        }
+
+        foreach(Transform C in CutHinges)
+        {
+            C.GetComponent<Renderer>().material = CutMaterial;
+        }
+
+        foreach(Transform C in CannotCut)
+        {
+            C.GetComponent<Renderer>().material = InvalidCutMaterial;
+        }
+    }
+
     public void BuildDualGraph()
     {
        foreach(SingleFace face in MapOfFaces.Values)
@@ -113,52 +134,40 @@ public class PolyCube
        }
     }
 
-    //Input: Gets the transform of whatever hinge the user clicked on in their "cut" and the path that they are currently cutting around.
-    //Description: Figures out if the next cut in the given path is a valid cut, and then adds the cut to the path if it is valid.
-    //A new cut is valid if it is adjacent to the last cut in the path.
-    /*
-    public void CutPolycube(Transform NewCut, ref List<Transform> Path)
+    //Input: Transform of hinge, a color for labeling cut edges, a color for edges that cannot be cut because cutting them would disconnect the dual graph
+    //Description: Manipulate the dual graph so that nodes in the graph are disconnected (i.e. edges are removed from the graph) according to the hinge the user
+    //              selected for cutting. Also, find the edges on the polycube that, when cut, would cause the graph to be disconnected and label them as "invalid"
+    public void CutPolyCube(Transform NewCut, Material CutColor, Material InvalidColor)
     {
-        //If the Path's length is greater than zero, then it already has at least one cut in it, so we need to check
-        //for valid cuts (cuts are adjacent).
-        Debug.Log("Checking if cut is valid...");
-        if (Path.Count > 0)
-        {
-            if (EdgeGraph.AreAdjacentEdges(NewCut, Path[Path.Count - 1]))
-            {
-                DualGraph.DisconnectFacesByEdge(NewCut, ref Path, EdgeGraph);
-                EdgeGraph.AddNewCut(NewCut);
-
-                if(Cut_Path.Count == 0 || Path.Count == 2)
-                {
-                    List<string> path = new List<string>();
-                    path.Add(EdgeGraph.GetEdgeDirection(NewCut, Path[Path.Count - 1]));
-                    Cut_Path.Add(path);
-                }
-                else
-                {
-                    Cut_Path[Cut_Path.Count - 1].Add(EdgeGraph.GetEdgeDirection(NewCut, Path[Path.Count - 1]));
-                }
-            }
-            else
-            {
-                Debug.Log("Nope can't disconnect");
-            }
-        }
-        else
-            DualGraph.DisconnectFacesByEdge(NewCut, ref Path, EdgeGraph);
-
-        Debug.Log("Done checking");
-    }*/
-
-    public void CutPolyCube(Transform NewCut)
-    {
-        DualGraph.DisconnectFacesByEdge(NewCut, EdgeGraph);
+        List<Transform> HingesToPaint;
+        DualGraph.CutIfAllowed(NewCut, EdgeGraph, out HingesToPaint);
         EdgeGraph.AddNewCut(NewCut);
 
-        if(EdgeGraph.CutIsHead(NewCut))
+        if (HingesToPaint != null)
         {
-            Debug.Log("Head of New Cut!");
+            PaintHinge(HingesToPaint[0], CutColor);
+            PaintHinge(HingesToPaint[1], CutColor);
+
+
+            CutHinges.Add(HingesToPaint[0]);
+            CutHinges.Add(HingesToPaint[1]);
+        }
+
+        
+        List<Transform> InvalidCuts = new List<Transform>();
+        Queue<Transform> TempInvalid = new Queue<Transform>();
+        DualGraph.CheckForValidCuts(EdgeGraph, out InvalidCuts);
+
+        foreach(Transform T in InvalidCuts)
+        {
+            T.GetComponent<Renderer>().material = InvalidColor;
+            TempInvalid.Enqueue(T);
+            CannotCut.Add(T);
+        }
+
+        while(TempInvalid.Count > 0)
+        {
+            PaintHinge(TempInvalid.Dequeue(), InvalidColor);
         }
     }
 
@@ -250,6 +259,38 @@ public class PolyCube
     public void DumpMapOfEdges()
     {
         EdgeGraph.EdgeDump();
+    }
+
+    public List<Transform> GetAdjacentHinges(Transform trans)
+    {
+        return EdgeGraph.GetAdjacentEdges(trans);
+    }
+
+
+    //NEED TO DEFINE PARALLEL, COLLINEAR, AND PERPENDICULAR HINGES
+    /*
+    public List<Transform> GetParallelHinges(Transform trans)
+    { }*/
+
+    /*
+    public List<Transform> GetCollinearHinges(Transform trans)
+    { }*/
+
+    /*
+    public List<Transform> GetPerpendicularHinges(Transform trans)
+    { }*/
+
+    public void DoublePaintHinge(Transform hinge, Material NewColor)
+    {
+        List<Transform> Hinges = EdgeGraph.GetEdgeFromHinge(hinge);
+
+        PaintHinge(Hinges[0], NewColor);
+        PaintHinge(Hinges[1], NewColor);
+    }
+
+    public void PaintHinge(Transform hinge, Material NewColor)
+    {
+        hinge.GetComponent<Renderer>().material = NewColor;
     }
 
     //Removes incident faces

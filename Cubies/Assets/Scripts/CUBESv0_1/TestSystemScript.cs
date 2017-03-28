@@ -12,6 +12,7 @@ public class TestSystemScript : MonoBehaviour {
     public float spacing;
     public GameObject camcam;
     public List<Vector3> cubePositions = new List<Vector3>();
+    public List<Material> Materials = new List<Material>();
 
     //????????????????
     //  Private variables
@@ -31,10 +32,10 @@ public class TestSystemScript : MonoBehaviour {
     {
         VIEW_MODE,
         HINGE_MODE,
-        CUT_MODE,
-        UNFOLD_MODE
+        ADJACENT_MODE
     }
     private State state = State.VIEW_MODE;
+    private State oldState = State.VIEW_MODE;
     // Use this for initialization
     void Start ()
     {
@@ -121,26 +122,32 @@ public class TestSystemScript : MonoBehaviour {
             camcamScript.allowMove = false;
             Debug.Log(state);
         }
-        else if (Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-        {
-            state = State.UNFOLD_MODE;
-            Cursor.lockState = CursorLockMode.None;
-            camcamScript.allowMove = false;
-            Debug.Log(state);
-        }
-        else if (Input.GetKeyDown(KeyCode.D) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-        {
-            state = State.CUT_MODE;
-            Cursor.lockState = CursorLockMode.None;
-            camcamScript.allowMove = false;
-            Debug.Log(state);
-        }
         else if (Input.GetKeyDown(KeyCode.Q) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.VIEW_MODE;
             Cursor.lockState = CursorLockMode.Locked;
             camcamScript.allowMove = true;
             Debug.Log(state);
+        }
+        else if (Input.GetKeyDown(KeyCode.H) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            state = State.ADJACENT_MODE;
+            Cursor.lockState = CursorLockMode.None;
+            camcamScript.allowMove = false;
+            Debug.Log(state);
+        }
+
+        if (oldState != state)
+            _OnStateChange();
+
+        oldState = state;
+    }
+
+    void _OnStateChange()
+    {
+        foreach(PolyCube P in PolyCubeObjectToPolyCube.Values)
+        {
+            P.Repaint(Materials[0], Materials[2], Materials[4]);
         }
     }
 
@@ -165,19 +172,41 @@ public class TestSystemScript : MonoBehaviour {
             case State.HINGE_MODE:
                 _HandleHingeMode(trans);
                 break;
+           
+            case State.ADJACENT_MODE:
+                _HandleAdjacentMode(trans);
+                break;
+
             default: break;
         }
     }
 
     void _HandleHingeMode(Transform trans)
     {
-        rotationHinge = trans;
         if (trans.name == "edge")
         {
             PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
-            p.CutPolyCube(trans);
+            p.CutPolyCube(trans, Materials[2], Materials[4]);
             FormPerforation(p);
             pickedHinge = true;
+        }
+    }
+
+    void _HandleAdjacentMode(Transform trans)
+    {
+        if(trans.name == "edge")
+        {
+            PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
+            List<Transform> AdjacentEdges = p.GetAdjacentHinges(trans);
+
+            p.Repaint(Materials[0], Materials[2], Materials[4]);
+
+            foreach(Transform h in AdjacentEdges)
+            {
+                    p.PaintHinge(h, Materials[1]);
+            }
+
+            p.DoublePaintHinge(trans, Materials[3]);
         }
     }
 

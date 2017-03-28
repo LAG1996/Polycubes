@@ -2,18 +2,54 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Adjacency Map class
+/*
+     * SPECIFICATION:
+     * ------------------Attribute: Description----------------
+     *      Dictionary<Transform, Node> Nodes : A mapping from a face's transform from Unity's built-in library to a Node object.
+     *      
+     *      Queue<Node> VisitedNodes : A list of nodes visited when the graph is traversed.
+     *      
+     * ------------------Method : Input : Output : Description----------------
+     *      
+     *      AdjacencyMap : N/A : N/A : Constructor method. Initializes attributes.
+     *      
+     *      AddNeighbors : Transform,Transform : N/A : Adds an edge in the adjacency map between the nodes that are represented by the two inputted transforms.
+     *      
+     *      CheckForValidCuts : HingeMap, out List<Transforms> : List<Transforms> (BY REFERENCE) : Adds temporary cuts (or removes edges temporarily) adjacent to existing
+     *                                      cuts and marks edges that would cause the graph to be disconnected when cut as unviable cuts. The validity of a cut is 
+     *                                      determined in the method CutIfAllowed.
+     *      
+     *      CutIfAllowed : Transform, HingeMap, out List<Transform> : bool : Uses BFS traversal to determine whether a graph is disconnected after a cut is made. If the
+     *                                      case is yes, the graph is disconnected, the edge removed by the cut is re-added to the graph and the function returns a FALSE
+     *                                      flag.
+     *                                      
+     *      Reconnect : Node, Node, Transform, HingeMap : N/A : Reconnects inputted nodes by calling AddNeighbors and sets the edge that connects them as an UNTOUCHED edge,
+     *                                        effectively reversing a cut, which would have the edge in a CUT state.
+     *      
+     *      InSameSubGraph : Node, Node : bool : Does a BFS traversal of the sub graph and checks if there exists a path between two edges. Returns true if a path exists, false if not.
+     *      
+     *      DisconnectFacesByEdge : Transform, HingeMap, out List<Transform> : N/A : Removes edge between two nodes in the graph (the edge and the nodes being mapped to the inputted Transform)
+     *                                                     and also sets the state of the corresponding node in the HingeMap to CUT.
+     *                                                     
+     *      AddNewNode : Transform : N/A : Maps the inputted transform to a new node in the adjacency map.
+     *      
+     *      NodeExists : Transform : bool : Returns true if the transform maps to a node in the adjacency map. False if not.
+     */
 public class AdjacencyMap {
 
     //*******************
     //  PRIVATE VARS
     //*******************
     private Dictionary<Transform, Node> Nodes;
+    private Queue<Node> VisitedNodes;
 	//*******************
     //  CONSTRUCTOR
     //*******************
 	public AdjacencyMap ()
     {
         Nodes = new Dictionary<Transform, Node>();
+        VisitedNodes = new Queue<Node>();
 	}
 
     public void AddNeighbors(Transform node, Transform neighbor)
@@ -33,26 +69,126 @@ public class AdjacencyMap {
         
     }
 
-    //Do a BFS of the adjacency map from face_1. Return if face_2 is found.
-    public bool InSameSubGraph(Transform face_1, Transform face_2)
+
+    public void CheckForValidCuts(HingeMap HM, out List<Transform> InvalidCuts)
     {
-        return false;
+        List<Transform> Cuts = HM.GetCutEdges();
+        List<Transform> AdjacentToCuts = new List<Transform>();
+        InvalidCuts = new List<Transform>();
+
+        List<Transform> Dummy = new List<Transform>();
+
+        foreach(Transform H in Cuts)
+        {
+            List<Transform> c = HM.GetAdjacentEdges(H);
+
+            foreach(Transform a in c)
+            {    
+                AdjacentToCuts.Add(a);
+            }
+        }
+
+        foreach(Transform c in AdjacentToCuts)
+        {
+            List<Transform> pair = new List<Transform>();
+
+            if(HM.GetEdgeState(c) == "UNTOUCHED")
+            {
+                bool canCut = CutIfAllowed(c, HM, out Dummy);
+
+                if(!canCut)
+                {
+                    Dummy = HM.GetHingePair(c);
+
+                    InvalidCuts.Add(Dummy[0]);
+                    InvalidCuts.Add(Dummy[1]);
+                }
+                else
+                {
+                    Reconnect(Nodes[Dummy[0].parent], Nodes[Dummy[1].parent], Dummy[0], HM);
+                }
+            }
+        }
+    }
+    
+    public bool CutIfAllowed(Transform hinge, HingeMap HM, out List<Transform> Pair)
+    {
+        bool canCut = true;
+        if(HM.GetEdgeState(hinge) == "UNTOUCHED")
+        {
+            Pair = HM.GetHingePair(hinge);
+
+            Node n1 = Nodes[Pair[0].parent];
+            Node n2 = Nodes[Pair[1].parent];
+
+
+            DisconnectFacesByEdge(hinge, HM, out Pair);
+        
+            if(!InSameSubGraph(n1, n2))
+            {
+                Reconnect(n1, n2, hinge, HM);
+                Pair = null;
+                canCut = false;
+            }
+
+        }
+        else
+        {
+            Pair = null;
+            canCut = false;
+        }
+
+        while(VisitedNodes.Count > 0)
+        {
+            VisitedNodes.Dequeue().visited = false;
+        }
+
+        return canCut;
+    }
+    
+    //Reconnect faces and return the edge between them to an "UNTOUCHED" state.
+    private void Reconnect(Node node_1, Node node_2, Transform hinge, HingeMap HM)
+    {
+        AddNeighbors(node_1.face, node_2.face);
+        HM.SetEdgeState("UNTOUCHED", hinge);
+        HM.RemoveCut(hinge);
     }
 
-    public void DisconnectFacesByEdge(Transform hinge, HingeMap HM)
+    //Do a BFS of the adjacency map from face_1. Return true if face_2 is found.
+    private bool InSameSubGraph(Node face_1, Node face_2)
     {
-        List<Transform> Pair = HM.GetHingePair(hinge);
+        if(face_1 == face_2)
+        {
+            return true;
+        }
+        else
+        {
+            face_1.visited = true;
+            VisitedNodes.Enqueue(face_1);
+            bool found = false;
+                foreach (Node N in face_1.Neighbors)
+                {
+                    if(!N.visited)
+                        found = InSameSubGraph(N, face_2);
+                    if (found)
+                        break;
+                }
+
+            return found;
+        }
+    }
+
+    private void DisconnectFacesByEdge(Transform hinge, HingeMap HM, out List<Transform> Pair)
+    {
+        Pair = HM.GetHingePair(hinge);
         
         if(HM.GetEdgeState(hinge) == "UNTOUCHED")
         {
-            Debug.Log("Disconnecting " + Pair[0].parent.name + " and " + Pair[1].parent.name);
-
             HM.SetEdgeState("CUT", hinge);
 
             Nodes[Pair[0].parent].RemoveNeighbor(Nodes[Pair[1].parent]);
             Nodes[Pair[1].parent].RemoveNeighbor(Nodes[Pair[0].parent]);
         }
-        
     }
 
     private void AddNewNode(Transform t)
@@ -93,15 +229,43 @@ public class AdjacencyMap {
         Nodes = null;
     }
 
+    //Node class for the adjacency map
+    /*
+     * SPECIFICATION:
+     * ------------------Attribute: Description----------------
+     *      Transform face : Points to the Transform of a Unity Game object that represents a face on the polycube (this includes the face's body and edges, which
+     *                      are separate children to the face object)
+     *      
+     *      
+     *      List<Node> Neighbors : Points to a list of each face's neighbors on the graph (i.e. all faces adjacent to the face in question)
+     *      
+     *      
+     *      bool visited : Helper variable for adjacency graph traversal that tells whether this node was visited during traversal. Should be reset at the end of traversal.
+     *      
+     *      
+     * ------------------Method : Input : Output : Description----------------
+     *      Node : Transform : N/A : Constructor for Node object. Initializes attributes, setting its face transform to be the transform in its input parameter.
+     *      
+     *      AddNeighbor : Node : N/A : Adds a neighbor to the node's list of neighbors. Does not allow for duplicate neighbors.
+     *      
+     *      RemoveNeighbor : Node : N/A : Removes the node inputted from the current node's list of neighbors if that inputted node is indeed in that list.
+     *      
+     *      NeighborExists : Node : bool : Tells us whether the current node has the inputted node as a neighbor
+     *      
+     *      ~Node : N/A : N/A : Deconstructor. Just does some trash cleanup. 
+     */
     protected class Node
     {
         public Transform face;
         public List<Node> Neighbors;
+
+        public bool visited;
         
         public Node(Transform face)
         {
             this.face = face;
             Neighbors = new List<Node>();
+            visited = false;
         }
         
         public void AddNeighbor(Node f)
@@ -112,7 +276,8 @@ public class AdjacencyMap {
 
         public void RemoveNeighbor(Node f)
         {
-            Neighbors.Remove(f);
+            if(NeighborExists(f))
+                Neighbors.Remove(f);
         }
 
         public bool NeighborExists(Node n)

@@ -2,6 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Hinge Map Class
+/*
+     * SPECIFICATION:
+     * ------------------Attribute: Description----------------
+     *      Dictionary<Transform, EdgeNode> HingeToEdge : A mapping from a face's transform from Unity's built-in library to an EdgeNode object.
+     *      
+     *      Dictionary<Transform, EdgeNode> HingeToCut : A mapping from a face's transform from Unity's built-in library to an EdgeNode object that is listed as being "CUT"
+     *      
+     *      List<Node> CutEdges : The set of all edges in the adjacency map that were cut, or removed
+     *      
+     *      List<EdgeNode> ListOfEdges: The list of all EdgeNodes in the map (may be unnecessary since this is just the list of all values in HingeToEdge)
+     *      
+     * ------------------Method : Input : Output : Description----------------
+     *      public HingeMap : N/A : N/A : Constructor class. Initializes all the of the attributes as empty sets.
+     *      
+     *      public SetEdge : Transform, Transform, Vector3 : N/A : Takes two incident hinges and maps them to an EdgeNode on the map.
+     *      
+     *      public GetHingePair : Transform : List<Transform> : Finds the hinge incident to the hinge inputted and then returns the pairing as a list.
+     *      
+     *      public EdgesOnSamePlane : Transform, Transform : bool : Entry-point for EdgesOnSamePlane method. Returns true if the two edges mapped to the inputted Transforms
+     *                                      are co-planar.
+     *                                      
+     *      private EdgesOnSamePlane : EdgeNode, EdgeNode : bool : Checks if two EdgeNodes are co-planar in orthogonal space. Returns true if that is the case.
+     *      
+     *      public AreAdjacentEdges : Transform, Transform : bool : Entry-point for AreAdjacentEdges method. Returns true if the two edges mapped to the inputted Transforms
+     *                                      share an endpoint (i.e. are adjacent).
+     *                                      
+     *      private AreAdjacentEdges : EdgeNode, EdgeNode : bool : Checks if two EdgeNodes share an endpoint (i.e. are adjacent) and are not incident.
+     *      
+     *      
+     */
 public class HingeMap {
 
     private Dictionary<Transform, EdgeNode> HingeToEdge;
@@ -28,12 +59,13 @@ public class HingeMap {
      
             if (ListOfEdges.Count >= 1)
             {
-                GetAdjacentEdges(E);
+                SetAdjacentEdges(E);
                 ListOfEdges.Add(E);
             }      
             else
                 ListOfEdges.Add(E);
 
+            //Set hinge_1 and hinge_2 to be keys that map to edge E
             HingeToEdge.Add(hinge_1, E);
             HingeToEdge.Add(hinge_2, E);
         }
@@ -42,7 +74,6 @@ public class HingeMap {
 
     public List<Transform> GetHingePair(Transform hinge)
     {
-        Debug.Log("Return Hinge Pair...");
         return HingeToEdge[hinge].GetHinges();
     }
 
@@ -60,6 +91,10 @@ public class HingeMap {
     private bool EdgesOnSamePlane(EdgeNode edge_1, EdgeNode edge_2)
     {
         Vector3 commonNorm;
+
+        if (edge_1 == edge_2)
+            return true;
+
         if (EdgesOnSameNormal(edge_1, edge_2, out commonNorm))
         {
             Vector3 pos_1 = edge_1.GetLatticePosition();
@@ -94,22 +129,45 @@ public class HingeMap {
     }
 
     //Input: Two Transforms that represent two edges of a graph.
-    //Output: Whether the edges are adjacent (they have like endpoints and are not equivalent).
+    //Output: Whether the edges are adjacent (they have like endpoints and are not equivalent/incident).
     public bool AreAdjacentEdges(Transform hinge_1, Transform hinge_2)
     {
-            //Need to check if the new cut is immediately adjacent to the last cut
-            string dir = GetEdgeDirection(hinge_1, hinge_2);
-            if (dir != "OUT_OF_BOUNDS" && dir != "INVALID")
-                return true;
-
-            return false;
+        return AreAdjacentEdges(HingeToEdge[hinge_1], HingeToEdge[hinge_2]);
     }
 
+    //Utility method for AreAdjacentEdges
     private bool AreAdjacentEdges(EdgeNode edge_1, EdgeNode edge_2)
     {
-        string dir = GetEdgeDirection(edge_1.GetLatticePosition() - edge_2.GetLatticePosition());
-        if (dir != "OUT_OF_BOUNDS" && dir != "INVALID")
-            return true;
+        if(edge_1 != edge_2)
+        {
+            foreach (Vector3 e in edge_1.GetEndPoints())
+            {
+                if (e == edge_2.GetEndPoints()[0] || e == edge_2.GetEndPoints()[1])
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public bool AreParallelEdges(Transform hinge_1, Transform hinge_2)
+    {
+        return AreParallelEdges(HingeToEdge[hinge_1], HingeToEdge[hinge_2]);
+    }
+
+    private bool AreParallelEdges(EdgeNode edge_1, EdgeNode edge_2)
+    {
+        if(EdgesOnSamePlane(edge_1, edge_2) && edge_1 != edge_2)
+        {
+            Vector3 commonNorm;
+
+            if(EdgesOnSameNormal(edge_1, edge_2, out commonNorm))
+            {
+                
+            }
+        }
 
         return false;
     }
@@ -173,23 +231,6 @@ public class HingeMap {
         return normal != Vector3.zero;
     }
 
-    public bool CheckPerpendicularity(Transform hinge_1, Transform hinge_2)
-    {
-        EdgeNode E_1 = HingeToEdge[hinge_1];
-
-        List<EdgeNode> E1N = E_1.GetNeighbors();
-
-        foreach(EdgeNode N in E1N)
-        {
-            if(CheckCollinearity(N.GetHinges()[0], hinge_2) != "NOT_COLLINEAR")
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public bool CutIsHead(Transform NewCut)
     {
         EdgeNode NC = HingeToCut[NewCut];
@@ -228,64 +269,6 @@ public class HingeMap {
         return true;
     }
 
-    public string CheckCollinearity(Transform hinge_1, Transform hinge_2)
-    {
-        if(EdgesOnSamePlane(hinge_1, hinge_2))
-        {
-            if(Diff(PreciseVector.Vector3ToDecimalString(HingeToEdge[hinge_1].GetLatticePosition(), 1), PreciseVector.Vector3ToDecimalString(HingeToEdge[hinge_2].GetLatticePosition(), 1)) == 1)
-            {
-                Vector3 Dir = HingeToEdge[hinge_1].GetLatticePosition() - HingeToEdge[hinge_2].GetLatticePosition();
-
-                List<EdgeNode> N = HingeToEdge[hinge_1].GetNeighbors();
-                
-                foreach(EdgeNode E in N)
-                {
-                    if(Diff(PreciseVector.Vector3ToDecimalString(E.GetLatticePosition() + Dir.normalized, 1), PreciseVector.Vector3ToDecimalString(HingeToEdge[hinge_2].GetLatticePosition(), 1)) <= 1)
-                    {
-                        return "COLLINEAR";
-                    }
-                }
-
-                return "PARALLEL";
-            }
-
-            return "NOT_COLLINEAR";
-        }
-
-
-        return "NOT_COLLINEAR";
-    }
-
-    private string CheckCollinearity(EdgeNode edge_1, EdgeNode edge_2)
-    {
-        if (EdgesOnSamePlane(edge_1, edge_2))
-        {
-            if (Diff(PreciseVector.Vector3ToDecimalString(edge_1.GetLatticePosition(), 1), PreciseVector.Vector3ToDecimalString(edge_2.GetLatticePosition(), 1)) > 0)
-            {
-                Vector3 Dir = edge_1.GetLatticePosition() - edge_2.GetLatticePosition();
-
-                List<EdgeNode> N = edge_1.GetNeighbors();
-
-                foreach (EdgeNode E in N)
-                {
-                    if (Diff(PreciseVector.Vector3ToDecimalString(E.GetLatticePosition() + Dir.normalized, 1), PreciseVector.Vector3ToDecimalString(edge_2.GetLatticePosition(), 1)) == 1)
-                    {
-                        Debug.Log("The edge belonging to faces " + edge_1.GetHinges()[0].parent.name + " , " + edge_1.GetHinges()[1].parent.name + " is collinear to the edge belonging to faces " + edge_2.GetHinges()[0].parent.name + " , " 
-                            + edge_2.GetHinges()[1].parent.name + " thanks to " + E.GetHinges()[0].parent.name + " , " + E.GetHinges()[1].parent.name);
-                        return "COLLINEAR";
-                    }
-                }
-                Debug.Log("The edge belonging to faces " + edge_1.GetHinges()[0].parent.name + " , " + edge_1.GetHinges()[1].parent.name + " is parallel to the edge belonging to faces " + edge_2.GetHinges()[0].parent.name + " , " + edge_2.GetHinges()[1].parent.name);
-                return "PARALLEL";
-            }
-
-            return "NOT_COLLINEAR";
-        }
-
-
-        return "NOT_COLLINEAR";
-    }
-
     public void AddNewCut(Transform hinge)
     {
         if(!HingeToCut.ContainsKey(hinge))
@@ -293,6 +276,12 @@ public class HingeMap {
             CutEdges.Add(HingeToEdge[hinge]);
             HingeToCut.Add(hinge, HingeToEdge[hinge]);
         }
+    }
+
+    public void RemoveCut(Transform hinge)
+    {
+        CutEdges.Remove(HingeToEdge[hinge]);
+        HingeToCut.Remove(hinge);
     }
 
     public string GetEdgeDirection(Transform hinge_1, Transform hinge_2)
@@ -327,21 +316,45 @@ public class HingeMap {
         return diff_count;
     }
 
-    private void GetAdjacentEdges(EdgeNode E)
+    private void SetAdjacentEdges(EdgeNode E)
     {
         int count = ListOfEdges.Count;
 
         for(int i = 0; i < count; i++)
         {
-            if(AreAdjacentEdges(E, ListOfEdges[i]))
+            if (AreAdjacentEdges(E, ListOfEdges[i]))
             {
-                if(CheckCollinearity(E, ListOfEdges[i]) != "PARALLEL")
-                {
-                    E.AddNewAdjacentEdge(ListOfEdges[i]);
-                    ListOfEdges[i].AddNewAdjacentEdge(E);
-                }
+                E.AddNewAdjacentEdge(ListOfEdges[i]);
+                ListOfEdges[i].AddNewAdjacentEdge(E);
             }
         }
+    }
+    
+    public List<Transform> GetAdjacentEdges(Transform Hinge)
+    {
+        EdgeNode E = HingeToEdge[Hinge];
+
+        List<Transform> AdjacentHinges = new List<Transform>();
+
+        foreach(EdgeNode N in E.GetNeighbors())
+        {
+            AdjacentHinges.Add(N.GetHinges()[0]);
+            AdjacentHinges.Add(N.GetHinges()[1]);
+        }
+
+        return AdjacentHinges;
+    }
+
+    public List<Transform> GetCutEdges()
+    {
+        List<Transform> hinges = new List<Transform>();
+        foreach(EdgeNode E in CutEdges)
+        {
+            hinges.Add(E.GetHinges()[0]);
+            hinges.Add(E.GetHinges()[1]);
+        }
+
+        return hinges;
     }
 
     //In this function, we get a string that denotes the direction one edge is from another.
@@ -444,6 +457,16 @@ public class HingeMap {
         HingeToEdge[hinge].SetEdgeState(NewState);
     }
 
+    public List<Transform> GetEdgeFromHinge(Transform H)
+    {
+        return HingeToEdge[H].GetHinges();
+    }
+
+    public bool IsCut(Transform H)
+    {
+        return HingeToEdge[H].GetEdgeState() == "CUT";
+    }
+
     public int GetCutCount()
     {
         return CutEdges.Count;
@@ -471,8 +494,13 @@ public class HingeMap {
         private Vector3 LatticePos;
 
         private List<EdgeNode> AdjacentEdges;
+        private List<EdgeNode> PerpendicularEdges;
+        private List<EdgeNode> ParallelEdges;
+        private List<EdgeNode> CollinearEdges;
 
         private List<Vector3> Normal;
+
+        private List<Vector3> EndPoints;
 
         private string Type;
         private string State;
@@ -504,6 +532,10 @@ public class HingeMap {
 
             State = "UNTOUCHED";
 
+            EndPoints = new List<Vector3>();
+
+            EndPoints.Add(LatticePos + hinge_1.forward * 0.5f);
+            EndPoints.Add(LatticePos + -hinge_1.forward * 0.5f);
 
             AdjacentEdges = new List<EdgeNode>();
         }
@@ -530,6 +562,11 @@ public class HingeMap {
         public List<Vector3> GetNormal()
         {
             return Normal;
+        }
+
+        public List<Vector3> GetEndPoints()
+        {
+            return EndPoints;
         }
 
         public Vector3 GetLatticePosition()
