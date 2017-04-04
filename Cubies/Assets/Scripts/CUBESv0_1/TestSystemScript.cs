@@ -32,7 +32,10 @@ public class TestSystemScript : MonoBehaviour {
     {
         VIEW_MODE,
         HINGE_MODE,
-        ADJACENT_MODE
+        ADJACENT_MODE,
+        PERPENDICULAR_MODE,
+        PARALLEL_MODE,
+        COLLINEAR_MODE
     }
     private State state = State.VIEW_MODE;
     private State oldState = State.VIEW_MODE;
@@ -129,9 +132,30 @@ public class TestSystemScript : MonoBehaviour {
             camcamScript.allowMove = true;
             Debug.Log(state);
         }
-        else if (Input.GetKeyDown(KeyCode.H) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        else if (Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             state = State.ADJACENT_MODE;
+            Cursor.lockState = CursorLockMode.None;
+            camcamScript.allowMove = false;
+            Debug.Log(state);
+        }
+        else if (Input.GetKeyDown(KeyCode.D) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            state = State.COLLINEAR_MODE;
+            Cursor.lockState = CursorLockMode.None;
+            camcamScript.allowMove = false;
+            Debug.Log(state);
+        }
+        else if (Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            state = State.PERPENDICULAR_MODE;
+            Cursor.lockState = CursorLockMode.None;
+            camcamScript.allowMove = false;
+            Debug.Log(state);
+        }
+        else if (Input.GetKeyDown(KeyCode.G) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            state = State.PARALLEL_MODE;
             Cursor.lockState = CursorLockMode.None;
             camcamScript.allowMove = false;
             Debug.Log(state);

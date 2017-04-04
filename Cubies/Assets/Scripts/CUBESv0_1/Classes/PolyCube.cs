@@ -129,9 +129,11 @@ public class PolyCube
     public void BuildDualGraph()
     {
        foreach(SingleFace face in MapOfFaces.Values)
-        {
+       {
            FindAdjacentFaces(face);
        }
+
+        EdgeGraph.SetEdgeRelationships();
     }
 
     //Input: Transform of hinge, a color for labeling cut edges, a color for edges that cannot be cut because cutting them would disconnect the dual graph
@@ -331,7 +333,7 @@ public class PolyCube
                 if (c.ListOfFaces.Count == 0)
                 {
                     MapOfCubes.Remove(PreciseVector.Vector3ToDecimalString(c.Cube.position, 1));
-                    Object.Destroy(c.Cube);
+                    Object.Destroy(c.Cube.gameObject);
                     cubeCount -= 1;
                 }
 

@@ -151,25 +151,69 @@ public class HingeMap {
 
         return false;
     }
-
-    public bool AreParallelEdges(Transform hinge_1, Transform hinge_2)
+    
+    public void SetEdgeRelationships()
     {
-        return AreParallelEdges(HingeToEdge[hinge_1], HingeToEdge[hinge_2]);
+        foreach(EdgeNode E in ListOfEdges)
+        {
+            foreach(EdgeNode F in ListOfEdges)
+            {
+                if(E != F)
+                {
+                    if (CheckEdgeRelation(E, F, "Collinear"))
+                        E.CollinearEdges.Add(F);
+                    else if (CheckEdgeRelation(E, F, "Perpendicular"))
+                        E.PerpendicularEdges.Add(F);
+                    else if (CheckEdgeRelation(E, F, "Parallel"))
+                        E.ParallelEdges.Add(F);
+                }
+            }
+        }
     }
 
-    private bool AreParallelEdges(EdgeNode edge_1, EdgeNode edge_2)
+    private bool CheckEdgeRelation(EdgeNode e1, EdgeNode e2, string RelationType)
     {
-        if(EdgesOnSamePlane(edge_1, edge_2) && edge_1 != edge_2)
-        {
-            Vector3 commonNorm;
 
-            if(EdgesOnSameNormal(edge_1, edge_2, out commonNorm))
-            {
-                
-            }
+        Vector3 A = e1.GetEndPoints()[0];
+        Vector3 B = e1.GetEndPoints()[1];
+
+        Vector3 C = e2.GetEndPoints()[0];
+        Vector3 D = e2.GetEndPoints()[1];
+
+        if(string.Compare(RelationType, "Collinear") == 0)
+        {
+            return EndPointsAreCollinear(A, B, C, D);
+        }
+        else if(string.Compare(RelationType, "Perpendicular") == 0)
+        {
+            return EdgesArePerpendicular(A, B, C, D);
+        }
+        else if(string.Compare(RelationType, "Parallel") == 0)
+        {
+            return EdgesAreParallel(A, B, C, D);
         }
 
         return false;
+    }
+
+    public bool EdgesArePerpendicular(Vector3 A, Vector3 B, Vector3 C, Vector3 D)
+    {
+        return (EndPointsAreCollinear(A, C) && EndPointsAreCollinear(A, D)) || (EndPointsAreCollinear(B, C) && EndPointsAreCollinear(B, D));
+    }
+
+    public bool EdgesAreParallel(Vector3 A, Vector3 B, Vector3 C, Vector3 D)
+    {
+        return ((EndPointsAreCollinear(A, C) && !EndPointsAreCollinear(A, D)) || (EndPointsAreCollinear(A, D) && !EndPointsAreCollinear(A, C))) && ((EndPointsAreCollinear(B, C) && !EndPointsAreCollinear(B,D)) || (EndPointsAreCollinear(B, D) && !EndPointsAreCollinear(B, C))) ;
+    }
+
+    private bool EndPointsAreCollinear(Vector3 A, Vector3 B, Vector3 C, Vector3 D)
+    {
+        return (EndPointsAreCollinear(A, C) && EndPointsAreCollinear(A, D)) || (EndPointsAreCollinear(B, C) && EndPointsAreCollinear(B, D));
+    }
+
+    private bool EndPointsAreCollinear(Vector3 End_1, Vector3 End_2)
+    {
+        return Diff(PreciseVector.Vector3ToDecimalString(End_1, 1), PreciseVector.Vector3ToDecimalString(End_2, 1)) == 1;
     }
 
     public bool EdgesOnSameNormal(Transform hinge_1, Transform hinge_2, out Vector3 normal)
@@ -494,9 +538,9 @@ public class HingeMap {
         private Vector3 LatticePos;
 
         private List<EdgeNode> AdjacentEdges;
-        private List<EdgeNode> PerpendicularEdges;
-        private List<EdgeNode> ParallelEdges;
-        private List<EdgeNode> CollinearEdges;
+        public List<EdgeNode> PerpendicularEdges;
+        public List<EdgeNode> ParallelEdges;
+        public List<EdgeNode> CollinearEdges;
 
         private List<Vector3> Normal;
 
@@ -538,6 +582,10 @@ public class HingeMap {
             EndPoints.Add(LatticePos + -hinge_1.forward * 0.5f);
 
             AdjacentEdges = new List<EdgeNode>();
+
+            ParallelEdges = new List<EdgeNode>();
+            PerpendicularEdges = new List<EdgeNode>();
+            CollinearEdges = new List<EdgeNode>();
         }
 
         public void AddNewAdjacentEdge(EdgeNode E)
