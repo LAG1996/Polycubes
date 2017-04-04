@@ -31,7 +31,7 @@ public class TestSystemScript : MonoBehaviour {
     private enum State
     {
         VIEW_MODE,
-        HINGE_MODE,
+        CUT_MODE,
         ADJACENT_MODE,
         PERPENDICULAR_MODE,
         PARALLEL_MODE,
@@ -109,7 +109,7 @@ public class TestSystemScript : MonoBehaviour {
                 camcamScript.allowMove = !camcamScript.allowMove;
             }
         }
-        else if (state == State.HINGE_MODE)
+        else if (state == State.CUT_MODE)
         {
             if (Input.GetKeyDown(KeyCode.Space) && rotationHinge != null)
             {
@@ -120,7 +120,7 @@ public class TestSystemScript : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.A) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
-            state = State.HINGE_MODE;
+            state = State.CUT_MODE;
             Cursor.lockState = CursorLockMode.None;
             camcamScript.allowMove = false;
             Debug.Log(state);
@@ -161,7 +161,7 @@ public class TestSystemScript : MonoBehaviour {
             Debug.Log(state);
         }
 
-        if (oldState != state)
+        if (oldState != state && state != State.VIEW_MODE)
             _OnStateChange();
 
         oldState = state;
@@ -193,19 +193,85 @@ public class TestSystemScript : MonoBehaviour {
     {
         switch (state)
         {
-            case State.HINGE_MODE:
-                _HandleHingeMode(trans);
+            case State.CUT_MODE:
+                _HandleCutMode(trans);
                 break;
            
             case State.ADJACENT_MODE:
                 _HandleAdjacentMode(trans);
                 break;
 
+            case State.COLLINEAR_MODE:
+                _HandleCollinearMode(trans);
+                break;
+
+            case State.PERPENDICULAR_MODE:
+                _HandlePerpendicularMode(trans);
+                break;
+
+            case State.PARALLEL_MODE:
+                _HandleParallelEdges(trans);
+                break;
+
             default: break;
         }
     }
 
-    void _HandleHingeMode(Transform trans)
+    void _HandleCollinearMode(Transform trans)
+    {
+        if(trans.name == "edge")
+        {
+            PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
+            List<Transform> CollinearEdges = p.GetRelatedHinges(trans, "Collinear");
+
+            p.Repaint(Materials[0], Materials[2], Materials[4]);
+
+            foreach (Transform h in CollinearEdges)
+            {
+                p.PaintHinge(h, Materials[1]);
+            }
+
+            p.DoublePaintHinge(trans, Materials[3]);
+        }
+    }
+
+    void _HandlePerpendicularMode(Transform trans)
+    {
+        if (trans.name == "edge")
+        {
+            PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
+            List<Transform> PerpendicularEdges = p.GetRelatedHinges(trans, "Perpendicular");
+
+            p.Repaint(Materials[0], Materials[2], Materials[4]);
+
+            foreach (Transform h in PerpendicularEdges)
+            {
+                p.PaintHinge(h, Materials[1]);
+            }
+
+            p.DoublePaintHinge(trans, Materials[3]);
+        }
+    }
+
+    void _HandleParallelEdges(Transform trans)
+    {
+        if (trans.name == "edge")
+        {
+            PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
+            List<Transform> ParallelEdges = p.GetRelatedHinges(trans, "Parallel");
+
+            p.Repaint(Materials[0], Materials[2], Materials[4]);
+
+            foreach (Transform h in ParallelEdges)
+            {
+                p.PaintHinge(h, Materials[1]);
+            }
+
+            p.DoublePaintHinge(trans, Materials[3]);
+        }
+    }
+
+    void _HandleCutMode(Transform trans)
     {
         if (trans.name == "edge")
         {

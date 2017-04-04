@@ -268,15 +268,28 @@ public class PolyCube
         return EdgeGraph.GetAdjacentEdges(trans);
     }
 
+    //Retrieve Collinear, Perpendicular, or Parallel edges    
+    public List<Transform> GetRelatedHinges(Transform trans, string RelationshipType)
+    {
+        List<Transform> ListHinges;
 
-    //NEED TO DEFINE PARALLEL, COLLINEAR, AND PERPENDICULAR HINGES
-    /*
-    public List<Transform> GetParallelHinges(Transform trans)
-    { }*/
+        if (string.Compare(RelationshipType, "Collinear") == 0)
+        {
+            ListHinges = EdgeGraph.GetCollinearEdges(trans);
+        }
+        else if (string.Compare(RelationshipType, "Perpendicular") == 0)
+        {
+            ListHinges = EdgeGraph.GetPerpendicularEdges(trans);
+        }
+        else if (string.Compare(RelationshipType, "Parallel") == 0)
+        {
+            ListHinges = EdgeGraph.GetParallelEdges(trans);
+        }
+        else
+            ListHinges = new List<Transform>();
 
-    /*
-    public List<Transform> GetCollinearHinges(Transform trans)
-    { }*/
+        return ListHinges;
+    }
 
     /*
     public List<Transform> GetPerpendicularHinges(Transform trans)
