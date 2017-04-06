@@ -25,6 +25,8 @@ public class PolyCube
     private Dictionary<Transform, Material> PaintedHinges = new Dictionary<Transform, Material>();
     private List<Transform> CutHinges = new List<Transform>();
     private List<Transform> CannotCut = new List<Transform>();
+    private List<Transform> UnfoldingLine = new List<Transform>();
+    private Transform FirstHingeCut = null;
 
     private float _CUBE_SCALE;
     private float _SPACING;
@@ -108,7 +110,7 @@ public class PolyCube
         }
     }
 
-    public void Repaint(Material DefaultMaterial, Material CutMaterial, Material InvalidCutMaterial)
+    public void Repaint(Material DefaultMaterial, Material CutMaterial, Material InvalidCutMaterial, Material UnfoldMaterial)
     {
         foreach(Transform C in OriginalHingePos.Keys)
         {
@@ -123,6 +125,11 @@ public class PolyCube
         foreach(Transform C in CannotCut)
         {
             C.GetComponent<Renderer>().material = InvalidCutMaterial;
+        }
+
+        foreach(Transform C in UnfoldingLine)
+        {
+            C.GetComponent<Renderer>().material = UnfoldMaterial;
         }
     }
 
@@ -139,90 +146,52 @@ public class PolyCube
     //Input: Transform of hinge, a color for labeling cut edges, a color for edges that cannot be cut because cutting them would disconnect the dual graph
     //Description: Manipulate the dual graph so that nodes in the graph are disconnected (i.e. edges are removed from the graph) according to the hinge the user
     //              selected for cutting. Also, find the edges on the polycube that, when cut, would cause the graph to be disconnected and label them as "invalid"
-    public void CutPolyCube(Transform NewCut, Material CutColor, Material InvalidColor)
+    public void CutPolyCube(Transform NewCut, Material CutColor, Material InvalidColor, Material DefaultColor, Material UnFold)
     {
-        List<Transform> HingesToPaint;
-        DualGraph.CutIfAllowed(NewCut, EdgeGraph, out HingesToPaint);
-        EdgeGraph.AddNewCut(NewCut);
 
-        if (HingesToPaint != null)
+        if (!EdgeGraph.IsCut(NewCut))
         {
-            PaintHinge(HingesToPaint[0], CutColor);
-            PaintHinge(HingesToPaint[1], CutColor);
+            if (EdgeGraph.IsAdjacentToCut(NewCut) || CutHinges.Count == 0)
+            {
+                List<Transform> ValidCuts;
+                bool valid = DualGraph.CutIfAllowed(NewCut, EdgeGraph, out ValidCuts);
+
+                if (valid)
+                {
+                    if (CutHinges.Count == 0)
+                    {
+                        FirstHingeCut = ValidCuts[0];
+                    }
+
+                    CutHinges.Add(ValidCuts[0]);
+                    CutHinges.Add(ValidCuts[1]);
+                }
+                else
+                {
+                    Debug.Log("Cannot cut there");
+                }
+            }      
+        }
+        else
+        {
+            List<Transform> HingePair;
+            DualGraph.ReconnectAroundEdge(NewCut, EdgeGraph, out HingePair);
 
 
-            CutHinges.Add(HingesToPaint[0]);
-            CutHinges.Add(HingesToPaint[1]);
+            CutHinges.Remove(HingePair[0]);
+            CutHinges.Remove(HingePair[1]);
         }
 
-        
-        List<Transform> InvalidCuts = new List<Transform>();
-        Queue<Transform> TempInvalid = new Queue<Transform>();
-        DualGraph.CheckForValidCuts(EdgeGraph, out InvalidCuts);
+        List<Transform>InvalidCuts = DualGraph.FindInvalidEdges(EdgeGraph);
+        CannotCut = InvalidCuts;
 
-        foreach(Transform T in InvalidCuts)
+        List<Transform> Line;
+        if (EdgeGraph.CheckIfUnfoldPossible(DualGraph, out Line))
         {
-            T.GetComponent<Renderer>().material = InvalidColor;
-            TempInvalid.Enqueue(T);
-            CannotCut.Add(T);
+            Debug.Log("Unfolding possible");
         }
-
-        while(TempInvalid.Count > 0)
-        {
-            PaintHinge(TempInvalid.Dequeue(), InvalidColor);
-        }
+        UnfoldingLine = Line;
     }
-
-    //Attempts to create a perforation (that is, an edge to rotate faces around)
-    //If successful, returns true.
-    //There are multiple checks that have to be made based on multiple cases:
-    /* 
-     * Check if first and last cuts are adjacent.
-     *              -If yes: return FALSE. No perforation can be formed because there is no space between them.
-     *              -If not: Another check must be made.
-     *                  Traverse the cut path. 
-     *                  -If traversal does not change directions (in other words, all we have been doing was trailing a line),
-     *                  then return FALSE. No perforation can be formed because there is no material to fold around.
-     *                  -Otherwise, another check must be made.
-     *                      Define the possible perforation to be an infinite line containing the perforation's endpoints.
-     *                      Also, define the half-spaces H1 and H2 to be the half-spaces formed by the plane PERF, where its axes are
-     *                      the axes tangential to the face it is residing on.
-     *                      Then traverse the cut path.
-     *                          -If the cut path never crosses half-spaces, then we don't need to worry. This is a valid cut path. Return TRUE.
-     *                          -If the cut path crosses half-spaces, we have to consider multiple cases.
-     *                              Continue traversing the cut path. If the cut path "changes normals" (i.e., cuts through edges whose faces have different
-     *                              normals than the faces of our first and last cuts) and the faces we are cutting through are "behind" the faces pertaining
-     *                              to our first and last cuts, then check if the cut path ever reaches end of the polycube.
-     *                              -If not, return FALSE since the faces we wish to rotate would just crash into other faces.
-     *                              -If it does, return TRUE, since there would be no collision.
-     *                              
-     *                              -ALSO, if the cut path does not "change normals", then return FALSE since unfolding would cause faces to become incident.
-     * 
-     * 
-     */
-
-    public bool CanFormPerf()
-    {
-        if (EdgeGraph.GetCutCount() <= 2)
-        {
-            return false;
-        }
-        /*
-        if (IsCollinear(PreciseVector.StringToVector3(OriginalHingePos[Path[0]]), PreciseVector.StringToVector3(OriginalHingePos[Path[Path.Count - 1]])))
-        {
-            Debug.Log("Collinear");
-            return false;
-        }
-
-        if(EdgeGraph.EdgesOnSamePlane(Path[0], Path[Path.Count - 1]))
-        {
-            return true;
-        }*/
-
-        return true;
-    }
-
-    
 
     public int GetCubeCount()
     {
@@ -277,13 +246,13 @@ public class PolyCube
         {
             ListHinges = EdgeGraph.GetCollinearEdges(trans);
         }
-        else if (string.Compare(RelationshipType, "Perpendicular") == 0)
-        {
-            ListHinges = EdgeGraph.GetPerpendicularEdges(trans);
-        }
         else if (string.Compare(RelationshipType, "Parallel") == 0)
         {
             ListHinges = EdgeGraph.GetParallelEdges(trans);
+        }
+        else if (string.Compare(RelationshipType, "Perpendicular") == 0)
+        {
+            ListHinges = EdgeGraph.GetPerpendicularEdges(trans);
         }
         else
             ListHinges = new List<Transform>();
@@ -411,7 +380,6 @@ public class PolyCube
                 //Debug.Log("Checking neighbor of parent cube at " + (Parent.Position + dir));
                 if (MapOfCubes.ContainsKey(PreciseVector.Vector3ToDecimalString(Parent.Position + dir, 1)))
                 {
-                    
                     CheckNeighborCubes(face, MapOfCubes[PreciseVector.Vector3ToDecimalString(Parent.Position + dir, 1)]);
                 }
             }
