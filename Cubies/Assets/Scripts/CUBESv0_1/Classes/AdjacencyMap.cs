@@ -43,100 +43,48 @@ public class AdjacencyMap {
     //*******************
     private Dictionary<Transform, Node> Nodes;
     private Queue<Node> VisitedNodes;
-	//*******************
+    //*******************
     //  CONSTRUCTOR
     //*******************
-	public AdjacencyMap ()
+    public AdjacencyMap()
     {
         Nodes = new Dictionary<Transform, Node>();
         VisitedNodes = new Queue<Node>();
-	}
+    }
 
     public void AddNeighbors(Transform node, Transform neighbor)
     {
-        if(!Nodes.ContainsKey(node))
+        if (!Nodes.ContainsKey(node))
         {
             AddNewNode(node);
         }
 
-        if(!Nodes.ContainsKey(neighbor))
+        if (!Nodes.ContainsKey(neighbor))
         {
             AddNewNode(neighbor);
         }
 
         Nodes[node].AddNeighbor(Nodes[neighbor]);
         Nodes[neighbor].AddNeighbor(Nodes[node]);
-        
-    }
 
-
-    public void CheckForValidCuts(HingeMap HM, out List<Transform> InvalidCuts)
-    {
-        List<Transform> Cuts = HM.GetCutEdges();
-        List<Transform> AdjacentToCuts = new List<Transform>();
-        InvalidCuts = new List<Transform>();
-
-        List<Transform> Dummy = new List<Transform>();
-
-        foreach(Transform H in Cuts)
-        {
-            List<Transform> c = HM.GetAdjacentEdges(H);
-
-            foreach(Transform a in c)
-            {    
-                AdjacentToCuts.Add(a);
-            }
-        }
-
-        foreach(Transform c in AdjacentToCuts)
-        {
-            List<Transform> pair = new List<Transform>();
-
-            if(HM.GetEdgeState(c) == "UNTOUCHED")
-            {
-                bool canCut = CutIfAllowed(c, HM, out Dummy);
-
-                if(!canCut)
-                {
-                    Dummy = HM.GetHingePair(c);
-
-                    InvalidCuts.Add(Dummy[0]);
-                    InvalidCuts.Add(Dummy[1]);
-                }
-                else
-                {
-                    Reconnect(Nodes[Dummy[0].parent], Nodes[Dummy[1].parent], Dummy[0], HM);
-                }
-            }
-        }
     }
     
-    public bool CutIfAllowed(Transform hinge, HingeMap HM, out List<Transform> Pair)
+    public bool CutIfAllowed(Transform hinge, HingeMap HM, out List<Transform> ValidPair)
     {
         bool canCut = true;
-        if(HM.GetEdgeState(hinge) == "UNTOUCHED")
-        {
-            Pair = HM.GetHingePair(hinge);
+        ValidPair = HM.GetHingePair(hinge);
 
-            Node n1 = Nodes[Pair[0].parent];
-            Node n2 = Nodes[Pair[1].parent];
+            Node n1 = Nodes[ValidPair[0].parent];
+            Node n2 = Nodes[ValidPair[1].parent];
 
 
-            DisconnectFacesByEdge(hinge, HM, out Pair);
+            DisconnectFacesByEdge(hinge, HM, out ValidPair);
         
             if(!InSameSubGraph(n1, n2))
             {
                 Reconnect(n1, n2, hinge, HM);
-                Pair = null;
                 canCut = false;
             }
-
-        }
-        else
-        {
-            Pair = null;
-            canCut = false;
-        }
 
         while(VisitedNodes.Count > 0)
         {
@@ -145,12 +93,50 @@ public class AdjacencyMap {
 
         return canCut;
     }
+
+    private void TempCut(Node n1, Node n2)
+    {
+        n1.RemoveNeighbor(n2);
+        n2.RemoveNeighbor(n1);
+    }
+
+    public List<Transform> FindInvalidEdges(HingeMap HM)
+    {
+        List<Transform> Edges = HM.GetNeighborsToCuts();
+        List<Transform> InvalidCuts = new List<Transform>();
+
+        foreach (Transform H in Edges)
+        {
+            List<Transform> Pair;
+
+            if(!CutIfAllowed(H, HM, out Pair))
+            {
+                InvalidCuts.Add(Pair[0]);
+                InvalidCuts.Add(Pair[1]);
+            }
+            else
+            {
+                ReconnectAroundEdge(H, HM, out Pair);
+            }      
+        }
+
+        return InvalidCuts;
+    }
+
+    public void ReconnectAroundEdge(Transform hinge, HingeMap HM, out List<Transform> Pair)
+    {
+        Pair = HM.GetHingePair(hinge);
+
+        Node n1 = Nodes[Pair[0].parent];
+        Node n2 = Nodes[Pair[1].parent];
+
+        Reconnect(n1, n2, hinge, HM);
+    }
     
     //Reconnect faces and return the edge between them to an "UNTOUCHED" state.
     private void Reconnect(Node node_1, Node node_2, Transform hinge, HingeMap HM)
     {
         AddNeighbors(node_1.face, node_2.face);
-        HM.SetEdgeState("UNTOUCHED", hinge);
         HM.RemoveCut(hinge);
     }
 
@@ -181,14 +167,10 @@ public class AdjacencyMap {
     private void DisconnectFacesByEdge(Transform hinge, HingeMap HM, out List<Transform> Pair)
     {
         Pair = HM.GetHingePair(hinge);
-        
-        if(HM.GetEdgeState(hinge) == "UNTOUCHED")
-        {
-            HM.SetEdgeState("CUT", hinge);
+        HM.AddNewCut(hinge);
 
-            Nodes[Pair[0].parent].RemoveNeighbor(Nodes[Pair[1].parent]);
-            Nodes[Pair[1].parent].RemoveNeighbor(Nodes[Pair[0].parent]);
-        }
+        Nodes[Pair[0].parent].RemoveNeighbor(Nodes[Pair[1].parent]);
+        Nodes[Pair[1].parent].RemoveNeighbor(Nodes[Pair[0].parent]);
     }
 
     private void AddNewNode(Transform t)

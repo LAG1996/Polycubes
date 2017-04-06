@@ -171,7 +171,7 @@ public class TestSystemScript : MonoBehaviour {
     {
         foreach(PolyCube P in PolyCubeObjectToPolyCube.Values)
         {
-            P.Repaint(Materials[0], Materials[2], Materials[4]);
+            P.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
         }
     }
 
@@ -224,7 +224,7 @@ public class TestSystemScript : MonoBehaviour {
             PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
             List<Transform> CollinearEdges = p.GetRelatedHinges(trans, "Collinear");
 
-            p.Repaint(Materials[0], Materials[2], Materials[4]);
+            p.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
 
             foreach (Transform h in CollinearEdges)
             {
@@ -242,7 +242,7 @@ public class TestSystemScript : MonoBehaviour {
             PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
             List<Transform> PerpendicularEdges = p.GetRelatedHinges(trans, "Perpendicular");
 
-            p.Repaint(Materials[0], Materials[2], Materials[4]);
+            p.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
 
             foreach (Transform h in PerpendicularEdges)
             {
@@ -260,7 +260,7 @@ public class TestSystemScript : MonoBehaviour {
             PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
             List<Transform> ParallelEdges = p.GetRelatedHinges(trans, "Parallel");
 
-            p.Repaint(Materials[0], Materials[2], Materials[4]);
+            p.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
 
             foreach (Transform h in ParallelEdges)
             {
@@ -276,8 +276,8 @@ public class TestSystemScript : MonoBehaviour {
         if (trans.name == "edge")
         {
             PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
-            p.CutPolyCube(trans, Materials[2], Materials[4]);
-            FormPerforation(p);
+            p.CutPolyCube(trans, Materials[2], Materials[4], Materials[0], Materials[5]);
+            p.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
             pickedHinge = true;
         }
     }
@@ -289,9 +289,9 @@ public class TestSystemScript : MonoBehaviour {
             PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
             List<Transform> AdjacentEdges = p.GetAdjacentHinges(trans);
 
-            p.Repaint(Materials[0], Materials[2], Materials[4]);
+            p.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
 
-            foreach(Transform h in AdjacentEdges)
+            foreach (Transform h in AdjacentEdges)
             {
                     p.PaintHinge(h, Materials[1]);
             }
@@ -300,16 +300,6 @@ public class TestSystemScript : MonoBehaviour {
         }
     }
 
-    void FormPerforation(PolyCube p)
-    {
-        if (p.CanFormPerf())
-        {
-            Debug.Log("Can form perforation");
-            //WalkPathCuts();
-        }
-        else
-            Debug.Log("Cannot form perforation");
-    }
 
     void WalkPathCuts()
     {
