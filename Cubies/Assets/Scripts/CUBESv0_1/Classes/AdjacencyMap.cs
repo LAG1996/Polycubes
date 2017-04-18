@@ -94,6 +94,69 @@ public class AdjacencyMap {
         return canCut;
     }
 
+    public void GetSubGraphsAroundUnfoldLine(HingeMap HM, Transform hinge, ref List<Transform> SG_1, ref List<Transform> SG_2)
+    {
+        List<Transform> Line = HM.GetUnfoldingLineFromHinge(hinge);
+        List<Transform> Pair = HM.GetHingePair(hinge);
+
+        List<Transform> Dummy = new List<Transform>();
+
+        if(Line.Count > 0)
+        {
+            foreach (Transform H in Line)
+            {
+                DisconnectFacesByEdge(H, HM, out Dummy);
+            }
+
+            Node n1 = Nodes[Pair[0].parent];
+            Node n2 = Nodes[Pair[1].parent];
+
+            SG_1 = GetGraph(n1);
+            SG_2 = GetGraph(n2);
+
+
+            foreach (Transform H in Line)
+            {
+                ReconnectAroundEdge(H, HM, out Dummy);
+            }
+
+            while (VisitedNodes.Count > 0)
+            {
+                VisitedNodes.Dequeue().visited = false;
+            }
+        }
+    }
+
+    private List<Transform> GetGraph(Node N)
+    {
+        List<Transform> Faces = new List<Transform>();
+        Queue<Node> N_Faces = new Queue<Node>();
+        N_Faces.Enqueue(N);
+
+        Faces.Add(N.face);
+        N.visited = true;
+        VisitedNodes.Enqueue(N);
+
+        while(N_Faces.Count > 0)
+        {
+            Node Current = N_Faces.Dequeue();
+
+            foreach(Node Neighbor in Current.Neighbors)
+            {
+                if(!Neighbor.visited)
+                {
+                    N_Faces.Enqueue(Neighbor);
+
+                    Faces.Add(Neighbor.face);
+                    Neighbor.visited = true;
+                    VisitedNodes.Enqueue(Neighbor);
+                }
+            }
+        }
+
+        return Faces;
+    }
+
     private void TempCut(Node n1, Node n2)
     {
         n1.RemoveNeighbor(n2);
@@ -182,6 +245,17 @@ public class AdjacencyMap {
     public bool NodeExists(Transform face)
     {
         return Nodes.ContainsKey(face);
+    }
+
+    public List<Transform> GetFaces()
+    {
+        List<Transform> faces = new List<Transform>();
+        foreach(Transform F in Nodes.Keys)
+        {
+            faces.Add(F);
+        }
+
+        return faces;
     }
 
     public void DataDump()

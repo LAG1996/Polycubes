@@ -38,6 +38,7 @@ public class HingeMap {
     private Dictionary<Transform, EdgeNode> HingeToEdge;
     private Dictionary<Transform, EdgeNode> HingeToCut;
     private Dictionary<Transform, EdgeNode> HingeToInvalid;
+    private Dictionary<EdgeNode, List<EdgeNode>> EdgeToListOfUnfolding;
     //private Dictionary<Transform, SingleFace> HingeToParentFace;
 
     private List<EdgeNode> CutEdges;
@@ -55,6 +56,7 @@ public class HingeMap {
         CutEdges = new List<EdgeNode>();
         ListOfEdges = new List<EdgeNode>();
         InvalidEdges = new List<EdgeNode>();
+        EdgeToListOfUnfolding = new Dictionary<EdgeNode, List<EdgeNode>>();
 
         VisitedEdges = new Queue<EdgeNode>();
     }
@@ -191,7 +193,18 @@ public class HingeMap {
 
         if(string.Compare(RelationType, "Collinear") == 0)
         {
-            return EndPointsAreCollinear(A, B, C, D);
+            bool col = EndPointsAreCollinear(A, B, C, D);
+
+            if (col)
+            {
+                if (e1.GetNeighbors().Contains(e2) && !e1.CollinearNeighbors.Contains(e2))
+                {
+                    e1.CollinearNeighbors.Add(e2);
+                    e2.CollinearNeighbors.Add(e1);
+                }
+            }
+
+            return col;
         }
         else if(string.Compare(RelationType, "Parallel") == 0)
         {
@@ -199,7 +212,18 @@ public class HingeMap {
         }
         else if (string.Compare(RelationType, "Perpendicular") == 0)
         {
-            return EdgesArePerpendicular(A, B, C, D);
+            bool perp =  EdgesArePerpendicular(A, B, C, D);
+
+            if(perp)
+            {
+                if(e1.GetNeighbors().Contains(e2) && !e1.PerpendicularNeighbors.Contains(e2))
+                {
+                    e1.PerpendicularNeighbors.Add(e2);
+                    e2.PerpendicularNeighbors.Add(e1);
+                }
+            }
+
+            return perp;
         }
 
         return false;
@@ -207,7 +231,15 @@ public class HingeMap {
 
     public bool EdgesArePerpendicular(Vector3 A, Vector3 B, Vector3 C, Vector3 D)
     {
-        return EndPointsAreCollinear(A, C) || EndPointsAreCollinear(A, D) || EndPointsAreCollinear(B, C) || EndPointsAreCollinear(B, D);
+        if ((EndPointsAreCollinear(A, C) && !EndPointsAreCollinear(A, D)) || (EndPointsAreCollinear(A, D) && !EndPointsAreCollinear(A, C)) || (!EndPointsAreCollinear(A, C) && !EndPointsAreCollinear(A, D)))
+        {
+            return EndPointsAreCollinear(B, D) && EndPointsAreCollinear(B, C);
+        }
+        else if ((EndPointsAreCollinear(B, C) && !EndPointsAreCollinear(B, D)) || (EndPointsAreCollinear(B, D) && !EndPointsAreCollinear(B, C)) || (!EndPointsAreCollinear(B, C) && !EndPointsAreCollinear(B, D)))
+        {
+            return EndPointsAreCollinear(A, D) && EndPointsAreCollinear(A, C);
+        }
+        return false;
     }
 
     public bool EdgesAreParallel(Vector3 A, Vector3 B, Vector3 C, Vector3 D)
@@ -344,20 +376,6 @@ public class HingeMap {
         }
     }
 
-    public string GetEdgeDirection(Transform hinge_1, Transform hinge_2)
-    {
-        Vector3 Dir = HingeToEdge[hinge_1].GetLatticePosition() - HingeToEdge[hinge_2].GetLatticePosition();
-        string dir = GetDirection(Dir);
-
-        return dir;
-    }
-
-    public string GetEdgeDirection(Vector3 Dir)
-    {
-        string dir = GetDirection(Dir);
-
-        return dir;
-    }
 
     private int Diff(string endPoint_1, string endPoint_2)
     {
@@ -390,96 +408,105 @@ public class HingeMap {
         }
     }
 
-    public bool CheckIfUnfoldPossible(AdjacencyMap A, out List<Transform>UnfoldingLine)
+    public void FindUnfoldingLines()
     {
-        bool yes = false;
-        string relation;
-
-        UnfoldingLine = new List<Transform>();
-
-        foreach(EdgeNode EndPoint1 in CutEdges)
+        EdgeToListOfUnfolding = new Dictionary<EdgeNode, List<EdgeNode>>();
+        foreach(EdgeNode Start in CutEdges)
         {
-            EdgeNode EndPoint2 = FindClosestRelatedCut(EndPoint1, out relation);
-
-            if (EndPoint2 == null)
+            List<EdgeNode> ClosestCuts = new List<EdgeNode>();
+            //Look at adjacent edges on side 1
+            foreach(EdgeNode N in Start.Neighbor_Side_1)
             {
-                break;
-            }
-
-            Debug.Log("Checking...");
-            FormLine(EndPoint1, EndPoint2, out UnfoldingLine);
-            
-            if(UnfoldingLine.Count > 0)
-            {
-                Debug.Log("A line exists...");
-                if (PathExists(EndPoint1, EndPoint2))
+                if(N.State != "CUT")
                 {
-                    yes = true;
-                    break;
+                    List<EdgeNode> Path = new List<EdgeNode>();
+                    EdgeNode End = CheckCollinear(Start, N, Start, ref Path);
+
+                    if (End != null && PathExists(Start, End))
+                    {
+                        foreach(EdgeNode E in Path)
+                        {
+                            if (!EdgeToListOfUnfolding.ContainsKey(E))
+                                EdgeToListOfUnfolding.Add(E, Path);
+                        }
+                    }
+                }
+
+                foreach(EdgeNode E in VisitedEdges)
+                {
+                    E.visited = false;
                 }
             }
-                
-            
-        }
 
-        while(VisitedEdges.Count > 0)
-        {
-            VisitedEdges.Dequeue().visited = false;
-        }
-
-        return yes;
-    }
-
-    private void FormLine(EdgeNode E1, EdgeNode E2, out List<Transform> Line)
-    {
-        EdgeNode NewSeg = E1;
-        Line = new List<Transform>();
-
-        bool fullLine = false;
-        while (NewSeg != null)
-        {
-            Debug.Log("Check");
-            NewSeg = FindClosestNeighbor(NewSeg, E2);
-
-            if (NewSeg != null)
+            //Look at adjacent edges on side 2
+            foreach(EdgeNode N in Start.Neighbor_Side_2)
             {
-                Debug.Log("new segment");
-                Line.Add(NewSeg.hinge_1);
-                Line.Add(NewSeg.hinge_2);
-
-                if (NewSeg.GetNeighbors().Contains(E2))
+                if (N.State != "CUT")
                 {
-                    fullLine = true;
-                    break;
-                }
-                    
-            }
-        }
+                    List<EdgeNode> Path = new List<EdgeNode>();
+                    EdgeNode End = CheckCollinear(Start, N, Start, ref Path);
 
-        if(!fullLine)
-        {
-            Line = new List<Transform>();
+                    if (End != null && PathExists(Start, End))
+                    {
+                        foreach (EdgeNode E in Path)
+                        {
+                            if (!EdgeToListOfUnfolding.ContainsKey(E))
+                                EdgeToListOfUnfolding.Add(E, Path);
+                        }
+                    }
+                }
+
+                foreach (EdgeNode E in VisitedEdges)
+                {
+                    E.visited = false;
+                }
+            }
         }
     }
-
-    private EdgeNode FindClosestNeighbor(EdgeNode From, EdgeNode To)
+    
+    private EdgeNode CheckCollinear(EdgeNode Start, EdgeNode Current, EdgeNode From, ref List<EdgeNode> Path)
     {
-        EdgeNode Closest = From;
-        List<EdgeNode> Neighbors = From.GetNeighbors();
-        foreach (EdgeNode N in Neighbors)
+        if (Current.State == "CUT" && !Current.GetNeighbors().Contains(Start))
+            return Current;
+        else if(Current.PerpendicularNeighbors.Contains(Start))
         {
-            if(N.GetEdgeState() != "CUT" && !CheckEdgeRelation(N, To, "Parallel") && (CheckEdgeRelation(N, To, "Collinear") || CheckEdgeRelation(N, To, "Perpendicular")))
+            Path.Add(Current);
+            foreach (EdgeNode P in Current.PerpendicularNeighbors)
             {
-                if((N.GetLatticePosition() - To.GetLatticePosition()).magnitude < (Closest.GetLatticePosition() - To.GetLatticePosition()).magnitude)
+                if (P.State == "CUT" && Start.ParallelEdges.Contains(P))
                 {
-                    Closest = N;
+                    return P;
+                }
+            }
+
+            foreach (EdgeNode N in Current.CollinearNeighbors)
+            {
+                if (!N.PerpendicularNeighbors.Contains(From))
+                {
+                    return CheckCollinear(Start, N, Current, ref Path);
+                }
+            }
+        }
+        else
+        {
+            Path.Add(Current);
+            foreach (EdgeNode P in Current.PerpendicularNeighbors)
+            {
+                if(P.State == "CUT" && Start.ParallelEdges.Contains(P))
+                {
+                    return P;
+                }
+            }
+            foreach(EdgeNode N in Current.CollinearNeighbors)
+            {
+                if(N != From)
+                {
+                        return CheckCollinear(Start, N, Current, ref Path);
                 }
             }
         }
 
-        if (Closest == From)
-            Closest = null;
-        return Closest;
+        return null;
     }
 
     private bool PathExists(EdgeNode E1, EdgeNode E2)
@@ -508,74 +535,6 @@ public class HingeMap {
         }
     }
 
-    private EdgeNode FindClosestRelatedCut(EdgeNode E, out string relation)
-    {
-        EdgeNode Closest = null;
-        relation = "NONE";
-        foreach(EdgeNode N in E.ParallelEdges)
-        {
-            if(string.Compare(N.GetEdgeState(), "CUT") == 0 && E != N && !E.GetNeighbors().Contains(N))
-            {
-                if (Closest == null)
-                {
-                    Closest = N;
-                    relation = "Parallel";
-                }
-                else
-                {
-                    if ((N.GetLatticePosition() - E.GetLatticePosition()).magnitude < (Closest.GetLatticePosition() - E.GetLatticePosition()).magnitude)
-                    {
-                        Closest = N;
-                        relation = "Parallel";
-                    }
-                }
-            }
-            
-        }
-
-        foreach (EdgeNode N in E.PerpendicularEdges)
-        {
-            if (string.Compare(N.GetEdgeState(), "CUT") == 0 && E != N && !E.GetNeighbors().Contains(N))
-            {
-                if (Closest == null)
-                {
-                    Closest = N;
-                    relation = "Perpendicular";
-                }
-                else
-                {
-                    if ((N.GetLatticePosition() - E.GetLatticePosition()).magnitude < (Closest.GetLatticePosition() - E.GetLatticePosition()).magnitude)
-                    {
-                        Closest = N;
-                        relation = "Perpendicular";
-                    }
-                }
-            }
-        }
-
-        foreach (EdgeNode N in E.CollinearEdges)
-        {
-            if (string.Compare(N.GetEdgeState(), "CUT") == 0 && E != N && !E.GetNeighbors().Contains(N))
-            {
-                if (Closest == null)
-                {
-                    Closest = N;
-                    relation = "Collinear";
-                }
-                else
-                {
-                    if ((N.GetLatticePosition() - E.GetLatticePosition()).magnitude < (Closest.GetLatticePosition() - E.GetLatticePosition()).magnitude)
-                    {
-                        Closest = N;
-                        relation = "Collinear";
-                    }
-                }
-            }
-        }
-
-        return Closest;
-    }
-
     public bool IsAdjacentToCut(Transform Hinge)
     {
         EdgeNode E = HingeToEdge[Hinge];
@@ -589,6 +548,49 @@ public class HingeMap {
         }
 
         return false;
+    }
+
+    public List<Transform> GetUnfoldingHinges()
+    {
+        List<Transform> Lines = new List<Transform>();
+
+        foreach (EdgeNode E in EdgeToListOfUnfolding.Keys)
+        {
+            Lines.Add(E.GetHinges()[0]);
+        }
+
+        return Lines;
+    }
+
+    public List<Transform> GetUnfoldingLines()
+    {
+        List<Transform> Lines = new List<Transform>();
+
+        foreach(EdgeNode E in EdgeToListOfUnfolding.Keys)
+        {
+            Lines.Add(E.GetHinges()[0]);
+            Lines.Add(E.GetHinges()[1]);
+        }
+
+        return Lines;
+    }
+
+    public List<Transform> GetUnfoldingLineFromHinge(Transform hinge)
+    {
+        if(EdgeToListOfUnfolding.ContainsKey(HingeToEdge[hinge]))
+        {
+            List<EdgeNode> EdgeLine = EdgeToListOfUnfolding[HingeToEdge[hinge]];
+            List<Transform> TransLine = new List<Transform>();
+
+            foreach (EdgeNode E in EdgeLine)
+            {
+                TransLine.Add(E.hinge_1);
+            }
+
+            return TransLine;
+        }
+
+        return new List<Transform>();
     }
     
     public List<Transform> GetAdjacentEdges(Transform Hinge)
@@ -609,6 +611,7 @@ public class HingeMap {
     public List<Transform> GetCollinearEdges(Transform Hinge)
     {
         EdgeNode E = HingeToEdge[Hinge];
+        Debug.Log(E.CollinearNeighbors.Count);
 
         List<Transform> CollinearHinges = new List<Transform>();
         
@@ -673,96 +676,6 @@ public class HingeMap {
         }
 
         return hinges;
-    }
-
-    //In this function, we get a string that denotes the direction one edge is from another.
-    //To keep generality, we use global space, making the "direction" independent of the polycube's global rotation.
-    //Also, if two edges are not immediately next to each other, return "OUT_OF_BOUNDS".
-    //We know to edges are not immediately next to each other if the magnitude between them is > 1.
-    private string GetDirection(Vector3 Direction)
-    {
-        if ((int)(Direction.magnitude) > 1)
-            return "OUT_OF_BOUNDS";
-
-        if (Direction == Vector3.up)
-        {
-            return "UP";
-        }
-        if (Direction == Vector3.down)
-        {
-            return "DOWN";
-        }
-        if (Direction == Vector3.right)
-        {
-            return "RIGHT";
-        }
-        if (Direction == Vector3.left)
-        {
-            return "LEFT";
-        }
-        if (Direction == Vector3.forward)
-        {
-            return "FORWARD";
-        }
-        if (Direction == Vector3.back)
-        {
-            return "BACK";
-        }
-
-        //Check for combinations of vertical-horizontal movement and horizontal-vertical movement
-        if (Direction == Vector3.right * .5f + Vector3.up * .5f)
-        {
-            return "UP_RIGHT";
-        }
-        if (Direction == Vector3.right * .5f + Vector3.down * .5f)
-        {
-            return "DOWN_RIGHT";
-        }
-        if (Direction == Vector3.right * .5f + Vector3.forward * .5f)
-        {
-            return "FORWARD_RIGHT";
-        }
-        if (Direction == Vector3.right * .5f + Vector3.back * .5f)
-        {
-            return "BACK_RIGHT";
-        }
-        if (Direction == Vector3.left * .5f + Vector3.up * .5f)
-        {
-            return "UP_LEFT";
-        }
-        if (Direction == Vector3.left * .5f + Vector3.down * .5f)
-        {
-            return "DOWN_LEFT";
-        }
-        if (Direction == Vector3.left * .5f + Vector3.forward * .5f)
-        {
-            return "FORWARD_LEFT";
-        }
-        if (Direction == Vector3.left * .5f + Vector3.back * .5f)
-        {
-            return "BACK_LEFT";
-        }
-
-        //Check for combinations of forward and vertical movement
-        if (Direction == Vector3.up * .5f + Vector3.forward * .5f)
-        {
-            return "UP_FORWARD";
-        }
-        if (Direction == Vector3.up * .5f + Vector3.back * .5f)
-        {
-            return "UP_BACK";
-        }
-        if (Direction == Vector3.down * .5f + Vector3.forward * .5f)
-        {
-            return "DOWN_FORWARD";
-        }
-        if (Direction == Vector3.down * .5f + Vector3.back * .5f)
-        {
-            return "DOWN_BACK";
-        }
-
-
-        return "INVALID";
     }
 
     public string GetEdgeState(Transform hinge)
@@ -847,14 +760,18 @@ public class HingeMap {
         public List<EdgeNode> PerpendicularEdges;
         public List<EdgeNode> ParallelEdges;
         public List<EdgeNode> CollinearEdges;
+        public List<EdgeNode> CollinearNeighbors;
+        public List<EdgeNode> PerpendicularNeighbors;
+        public List<EdgeNode> Neighbor_Side_1;
+        public List<EdgeNode> Neighbor_Side_2;
 
         private List<Vector3> Normal;
 
         private List<Vector3> EndPoints;
 
         private string Type;
-        private string State;
 
+        public string State;
         public bool visited;
  
         public EdgeNode(Transform h1, Transform h2, Vector3 LP)
@@ -894,6 +811,10 @@ public class HingeMap {
             ParallelEdges = new List<EdgeNode>();
             PerpendicularEdges = new List<EdgeNode>();
             CollinearEdges = new List<EdgeNode>();
+            CollinearNeighbors = new List<EdgeNode>();
+            PerpendicularNeighbors = new List<EdgeNode>();
+            Neighbor_Side_1 = new List<EdgeNode>();
+            Neighbor_Side_2 = new List<EdgeNode>();
 
             visited = false;
         }
@@ -901,6 +822,11 @@ public class HingeMap {
         public void AddNewAdjacentEdge(EdgeNode E)
         {
             AdjacentEdges.Add(E);
+
+            if (E.GetEndPoints()[0] == EndPoints[0] || E.GetEndPoints()[1] == EndPoints[0])
+                Neighbor_Side_1.Add(E);
+            else
+                Neighbor_Side_2.Add(E);
         }
 
         public List<Transform> GetHinges()

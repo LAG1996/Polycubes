@@ -12,18 +12,19 @@ public class TestSystemScript : MonoBehaviour {
     public float spacing;
     public GameObject camcam;
     public List<Vector3> cubePositions = new List<Vector3>();
-    public List<Material> Materials = new List<Material>();
+    public List<Material> Hinge_Material = new List<Material>();
+    public List<Material> Face_Material = new List<Material>();
 
     //????????????????
     //  Private variables
     //????????????????
-    private Dictionary<GameObject, PolyCube> PolyCubeObjectToPolyCube = new Dictionary<GameObject, PolyCube>();
+    private Dictionary<GameObject, PolyCube> PieceToPolyCube = new Dictionary<GameObject, PolyCube>();
     private float scaling;
     bool _TriggerAddCube;
     
     private Control_Cam camcamScript;
 
-    private bool pickedHinge = false;
+    private bool _seeSubGraphs = false;
     private Transform rotationHinge = null;
 
     private List<Transform> Cuts;
@@ -35,7 +36,8 @@ public class TestSystemScript : MonoBehaviour {
         ADJACENT_MODE,
         PERPENDICULAR_MODE,
         PARALLEL_MODE,
-        COLLINEAR_MODE
+        COLLINEAR_MODE,
+        UNFOLD_MODE
     }
     private State state = State.VIEW_MODE;
     private State oldState = State.VIEW_MODE;
@@ -79,19 +81,19 @@ public class TestSystemScript : MonoBehaviour {
             p.AddCube(pos, Instantiate(cube, pos, Quaternion.identity, poly.transform));
         }
         cubePositions.Clear();
-        PolyCubeObjectToPolyCube.Add(poly, p);
+        PieceToPolyCube.Add(poly, p);
         //p.DumpMapOfCubes();
         //p.DumpMapOfFaces();
         p.BuildDualGraph();
+        p.Repaint(Hinge_Material[0], Hinge_Material[2], Hinge_Material[4], Hinge_Material[5], Face_Material[0]);
         //p.DumpMapOfEdges();
         //p.DumpAdjacency();
     }
 
     
-    public PolyCube GetPolyCubeFromGameObject(GameObject poly)
+    public PolyCube GetPolyCubeFromTrans(Transform trans)
     {
-        PolyCube n;
-        PolyCubeObjectToPolyCube.TryGetValue(poly, out n);
+        PolyCube n = PolyCube.GetPolyCubeFromTransform(trans);
 
         return n;
     }
@@ -107,13 +109,6 @@ public class TestSystemScript : MonoBehaviour {
                 else
                     Cursor.lockState = CursorLockMode.None;
                 camcamScript.allowMove = !camcamScript.allowMove;
-            }
-        }
-        else if (state == State.CUT_MODE)
-        {
-            if (Input.GetKeyDown(KeyCode.Space) && rotationHinge != null)
-            {
-                GetPolyCubeFromGameObject(rotationHinge.parent.parent.parent.gameObject).StartRotate();
             }
         }
 
@@ -160,6 +155,13 @@ public class TestSystemScript : MonoBehaviour {
             camcamScript.allowMove = false;
             Debug.Log(state);
         }
+        else if (Input.GetKeyDown(KeyCode.H) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            state = State.UNFOLD_MODE;
+            Cursor.lockState = CursorLockMode.None;
+            camcamScript.allowMove = false;
+            Debug.Log(state);
+        }
 
         if (oldState != state && state != State.VIEW_MODE)
             _OnStateChange();
@@ -169,9 +171,10 @@ public class TestSystemScript : MonoBehaviour {
 
     void _OnStateChange()
     {
-        foreach(PolyCube P in PolyCubeObjectToPolyCube.Values)
+        foreach(PolyCube P in PieceToPolyCube.Values)
         {
-            P.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
+            P.SeeSubGraph = false;
+            RepaintPolyCube(P);
         }
     }
 
@@ -213,7 +216,28 @@ public class TestSystemScript : MonoBehaviour {
                 _HandleParallelEdges(trans);
                 break;
 
+            case State.UNFOLD_MODE:
+                _HandleUnfoldMode(trans);
+                break;
+
             default: break;
+        }
+    }
+
+    void _HandleUnfoldMode(Transform trans)
+    {
+        PolyCube p = GetPolyCubeFromTrans(trans);
+        if (trans.name == "edge")
+        {
+            p.ShowSubGraphs(trans, Face_Material[1], Face_Material[2]);
+        }
+        else if(trans.name == "body")
+        {
+            if(p.SeeSubGraph)
+            {
+                Debug.Log("Rotate?");
+                p.RotateSubGraph(trans);
+            }
         }
     }
 
@@ -221,17 +245,17 @@ public class TestSystemScript : MonoBehaviour {
     {
         if(trans.name == "edge")
         {
-            PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
+            PolyCube p = GetPolyCubeFromTrans(trans);
             List<Transform> CollinearEdges = p.GetRelatedHinges(trans, "Collinear");
 
-            p.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
+            RepaintPolyCube(p);
 
             foreach (Transform h in CollinearEdges)
             {
-                p.PaintHinge(h, Materials[1]);
+                p.PaintHinge(h, Hinge_Material[1]);
             }
 
-            p.DoublePaintHinge(trans, Materials[3]);
+            p.DoublePaintHinge(trans, Hinge_Material[3]);
         }
     }
 
@@ -239,17 +263,17 @@ public class TestSystemScript : MonoBehaviour {
     {
         if (trans.name == "edge")
         {
-            PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
+            PolyCube p = GetPolyCubeFromTrans(trans);
             List<Transform> PerpendicularEdges = p.GetRelatedHinges(trans, "Perpendicular");
 
-            p.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
+            RepaintPolyCube(p);
 
             foreach (Transform h in PerpendicularEdges)
             {
-                p.PaintHinge(h, Materials[1]);
+                p.PaintHinge(h, Hinge_Material[1]);
             }
 
-            p.DoublePaintHinge(trans, Materials[3]);
+            p.DoublePaintHinge(trans, Hinge_Material[3]);
         }
     }
 
@@ -257,17 +281,17 @@ public class TestSystemScript : MonoBehaviour {
     {
         if (trans.name == "edge")
         {
-            PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
+            PolyCube p = GetPolyCubeFromTrans(trans);
             List<Transform> ParallelEdges = p.GetRelatedHinges(trans, "Parallel");
 
-            p.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
+            RepaintPolyCube(p);
 
             foreach (Transform h in ParallelEdges)
             {
-                p.PaintHinge(h, Materials[1]);
+                p.PaintHinge(h, Hinge_Material[1]);
             }
 
-            p.DoublePaintHinge(trans, Materials[3]);
+            p.DoublePaintHinge(trans, Hinge_Material[3]);
         }
     }
 
@@ -275,10 +299,8 @@ public class TestSystemScript : MonoBehaviour {
     {
         if (trans.name == "edge")
         {
-            PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
-            p.CutPolyCube(trans, Materials[2], Materials[4], Materials[0], Materials[5]);
-            p.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
-            pickedHinge = true;
+            PolyCube p = GetPolyCubeFromTrans(trans);
+            RepaintPolyCube(p);
         }
     }
 
@@ -286,43 +308,22 @@ public class TestSystemScript : MonoBehaviour {
     {
         if(trans.name == "edge")
         {
-            PolyCube p = GetPolyCubeFromGameObject(trans.parent.parent.parent.gameObject);
+            PolyCube p = GetPolyCubeFromTrans(trans);
             List<Transform> AdjacentEdges = p.GetAdjacentHinges(trans);
 
-            p.Repaint(Materials[0], Materials[2], Materials[4], Materials[5]);
+            RepaintPolyCube(p);
 
             foreach (Transform h in AdjacentEdges)
             {
-                    p.PaintHinge(h, Materials[1]);
+                    p.PaintHinge(h, Hinge_Material[1]);
             }
 
-            p.DoublePaintHinge(trans, Materials[3]);
+            p.DoublePaintHinge(trans, Hinge_Material[3]);
         }
     }
 
-
-    void WalkPathCuts()
+    void RepaintPolyCube(PolyCube P)
     {
-        if((Cuts[0].position - Cuts[Cuts.Count - 1].position).normalized == Cuts[0].right)
-        {
-            //Start walking right
-            Debug.Log("Right");
-        }
-        else if((Cuts[0].position - Cuts[Cuts.Count - 1].position).normalized == -Cuts[0].right)
-        {
-            //Start walking left
-            Debug.Log("Left");
-        }
-        else if ((Cuts[0].position - Cuts[Cuts.Count - 1].position).normalized == Cuts[0].up)
-        {
-            //Start walking up
-            Debug.Log("Up");
-        }
-        else if ((Cuts[0].position - Cuts[Cuts.Count - 1].position).normalized == -Cuts[0].up)
-        {
-            //Start walking down
-            Debug.Log("Down");
-        }
-
+        P.Repaint(Hinge_Material[0], Hinge_Material[2], Hinge_Material[4], Hinge_Material[5], Face_Material[0]);
     }
 }

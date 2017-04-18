@@ -10,6 +10,8 @@ public class SingleFace {
     private Transform face;
     private List<Transform> edges;
 
+    public Transform body;
+
     public SingleCube Parent { get { return ParentCube; } set { ParentCube = value; } }
     public Transform Trans { get { return face; } }
 
@@ -18,7 +20,8 @@ public class SingleFace {
         ParentCube = parent;
         this.localPosition = localPosition;
         latticePosition = face.position;
-        this.face = face;   
+        this.face = face;
+        body = face.FindChild("body");
     }
 
     public SingleFace(Vector3 localPosition, Transform face)
@@ -36,6 +39,8 @@ public class SingleFace {
                 edges.Add(hinge);
             }
         }
+
+        body = face.FindChild("body");
     }
 
     public Vector3 GetLatticePosition()
