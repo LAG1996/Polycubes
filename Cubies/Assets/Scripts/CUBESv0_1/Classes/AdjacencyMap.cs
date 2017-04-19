@@ -74,8 +74,8 @@ public class AdjacencyMap {
         bool canCut = true;
         ValidPair = HM.GetHingePair(hinge);
 
-            Node n1 = Nodes[ValidPair[0].parent];
-            Node n2 = Nodes[ValidPair[1].parent];
+            Node n1 = Nodes[ValidPair[0]];
+            Node n2 = Nodes[ValidPair[1]];
 
 
             DisconnectFacesByEdge(hinge, HM, out ValidPair);
@@ -108,8 +108,8 @@ public class AdjacencyMap {
                 DisconnectFacesByEdge(H, HM, out Dummy);
             }
 
-            Node n1 = Nodes[Pair[0].parent];
-            Node n2 = Nodes[Pair[1].parent];
+            Node n1 = Nodes[Pair[0]];
+            Node n2 = Nodes[Pair[1]];
 
             SG_1 = GetGraph(n1);
             SG_2 = GetGraph(n2);
@@ -133,7 +133,7 @@ public class AdjacencyMap {
         Queue<Node> N_Faces = new Queue<Node>();
         N_Faces.Enqueue(N);
 
-        Faces.Add(N.face);
+        Faces.Add(N.body);
         N.visited = true;
         VisitedNodes.Enqueue(N);
 
@@ -147,7 +147,7 @@ public class AdjacencyMap {
                 {
                     N_Faces.Enqueue(Neighbor);
 
-                    Faces.Add(Neighbor.face);
+                    Faces.Add(Neighbor.body);
                     Neighbor.visited = true;
                     VisitedNodes.Enqueue(Neighbor);
                 }
@@ -190,8 +190,8 @@ public class AdjacencyMap {
     {
         Pair = HM.GetHingePair(hinge);
 
-        Node n1 = Nodes[Pair[0].parent];
-        Node n2 = Nodes[Pair[1].parent];
+        Node n1 = Nodes[Pair[0]];
+        Node n2 = Nodes[Pair[1]];
 
         Reconnect(n1, n2, hinge, HM);
     }
@@ -232,19 +232,34 @@ public class AdjacencyMap {
         Pair = HM.GetHingePair(hinge);
         HM.AddNewCut(hinge);
 
-        Nodes[Pair[0].parent].RemoveNeighbor(Nodes[Pair[1].parent]);
-        Nodes[Pair[1].parent].RemoveNeighbor(Nodes[Pair[0].parent]);
+        Nodes[Pair[0]].RemoveNeighbor(Nodes[Pair[1]]);
+        Nodes[Pair[1]].RemoveNeighbor(Nodes[Pair[0]]);
     }
 
     private void AddNewNode(Transform t)
     {
         Node newNode = new Node(t);
+
         Nodes.Add(t, newNode);
+        foreach (Transform P in t)
+        {
+            Nodes.Add(P, newNode);
+        }
     }
 
     public bool NodeExists(Transform face)
     {
         return Nodes.ContainsKey(face);
+    }
+
+    public Transform GetBodyFromHinge(Transform hinge)
+    {
+        return Nodes[hinge].body;
+    }
+
+    public List<Transform> GetHingesOfNode(Transform T)
+    {
+        return Nodes[T].Hinges;
     }
 
     public List<Transform> GetFaces()
@@ -313,13 +328,26 @@ public class AdjacencyMap {
     protected class Node
     {
         public Transform face;
+        public Transform body;
         public List<Node> Neighbors;
+        public List<Transform> Hinges;
 
         public bool visited;
         
         public Node(Transform face)
         {
             this.face = face;
+            this.body = face.FindChild("body");
+            Hinges = new List<Transform>();
+
+            foreach(Transform H in face)
+            {
+                if(H.name == "edge")
+                {
+                    Hinges.Add(H);
+                }
+            }
+
             Neighbors = new List<Node>();
             visited = false;
         }

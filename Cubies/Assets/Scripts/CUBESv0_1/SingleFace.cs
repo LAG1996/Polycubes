@@ -8,9 +8,10 @@ public class SingleFace {
     private Vector3 localPosition;
     private Vector3 latticePosition;
     private Transform face;
-    private List<Transform> edges;
+    
 
     public Transform body;
+    public List<Transform> edges;
 
     public SingleCube Parent { get { return ParentCube; } set { ParentCube = value; } }
     public Transform Trans { get { return face; } }

@@ -85,7 +85,8 @@ public class TestSystemScript : MonoBehaviour {
         //p.DumpMapOfCubes();
         //p.DumpMapOfFaces();
         p.BuildDualGraph();
-        p.Repaint(Hinge_Material[0], Hinge_Material[2], Hinge_Material[4], Hinge_Material[5], Face_Material[0]);
+        PolyCube.MapTransformsToPolyCube(p);
+        RepaintPolyCube(p);
         //p.DumpMapOfEdges();
         //p.DumpAdjacency();
     }
@@ -167,6 +168,8 @@ public class TestSystemScript : MonoBehaviour {
             _OnStateChange();
 
         oldState = state;
+
+        _HandlePolyCubeRotation();
     }
 
     void _OnStateChange()
@@ -174,7 +177,26 @@ public class TestSystemScript : MonoBehaviour {
         foreach(PolyCube P in PieceToPolyCube.Values)
         {
             P.SeeSubGraph = false;
+            P.Selected_Hinge = null;
             RepaintPolyCube(P);
+        }
+    }
+
+    void _HandlePolyCubeRotation()
+    {
+        Queue<PolyCube> PolyCubeNotDone = new Queue<PolyCube>();
+        
+        foreach(PolyCube P in PolyCube.PolyCubesToHandleRotation)
+        {
+            if (PolyCube.HandleRotations(P))
+                PolyCubeNotDone.Enqueue(P);
+        }
+
+        PolyCube.PolyCubesToHandleRotation = new List<PolyCube>();
+
+        while(PolyCubeNotDone.Count > 0)
+        {
+            PolyCube.PolyCubesToHandleRotation.Add(PolyCubeNotDone.Dequeue());
         }
     }
 
@@ -236,7 +258,7 @@ public class TestSystemScript : MonoBehaviour {
             if(p.SeeSubGraph)
             {
                 Debug.Log("Rotate?");
-                p.RotateSubGraph(trans);
+                p.InitializeRotate(trans);
             }
         }
     }
@@ -300,6 +322,7 @@ public class TestSystemScript : MonoBehaviour {
         if (trans.name == "edge")
         {
             PolyCube p = GetPolyCubeFromTrans(trans);
+            p.CutPolyCube(trans);
             RepaintPolyCube(p);
         }
     }
