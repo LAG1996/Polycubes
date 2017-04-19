@@ -76,7 +76,7 @@ public class PolyCube
 
             if (H.localEulerAngles.z < MAX_HINGE_ROTATION)
             {
-                Debug.Log("Done");
+                Debug.Log("Not done");
                 InCompleteRotations.Enqueue(H);
             }
         }
@@ -313,26 +313,40 @@ public class PolyCube
         if(Selected_Hinge != null)
         {
             Queue<Transform> All_The_Things = new Queue<Transform>();
+            Transform ParentHinge;
 
             List<Transform> Pair = EdgeGraph.GetHingePair(Selected_Hinge);
 
             List<Transform> SG_1 = new List<Transform>();
             List<Transform> SG_2 = new List<Transform>();
 
+            Transform SG_1_Parent;
+            Transform SG_2_Parent;
+
+            Transform Parent_H;
+
             if(TransToSubGraph_1.ContainsKey(Pair[0]))
             {
                 SG_1 = TransToSubGraph_1[Pair[0]];
                 SG_2 = TransToSubGraph_2[Pair[1]];
+
+                SG_1_Parent = Pair[0];
+                SG_2_Parent = Pair[1];
+
             }
-            else if(TransToSubGraph_1.ContainsKey(Pair[1]))
+            else
             {
                 SG_1 = TransToSubGraph_1[Pair[1]];
                 SG_2 = TransToSubGraph_2[Pair[0]];
+
+                SG_1_Parent = Pair[1];
+                SG_2_Parent = Pair[0];
             }
 
 
             if (SG_1.Contains(body))
             {
+                Parent_H = SG_1_Parent;
                 foreach (Transform B in SG_1)
                 {
                     All_The_Things.Enqueue(B);
@@ -350,6 +364,7 @@ public class PolyCube
             }
             else
             {
+                Parent_H = SG_2_Parent;
                 foreach (Transform B in SG_2)
                 {
                     All_The_Things.Enqueue(B);
@@ -368,10 +383,10 @@ public class PolyCube
 
             while(All_The_Things.Count > 0)
             {
-                All_The_Things.Dequeue().parent = Selected_Hinge;
+                All_The_Things.Dequeue().parent = Parent_H;
             }
 
-            HingesToRotateAround.Enqueue(Selected_Hinge);
+            HingesToRotateAround.Enqueue(Parent_H);
 
             if(!PolyCubesToHandleRotation.Contains(this))
             {
