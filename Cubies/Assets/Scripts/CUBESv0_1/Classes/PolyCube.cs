@@ -11,8 +11,8 @@ public class PolyCube
     public bool InRotation = false;
     public Transform Selected_Hinge = null;
     public const float MAX_HINGE_ROTATION = 90.0f;
-    public const float ROTATION_SPEED = 9.0f;
 
+    public static float ROTATION_SPEED = 9.0f;
     public static Dictionary<Transform, PolyCube> TransToPolyCube = new Dictionary<Transform, PolyCube>();
     public static List<PolyCube> PolyCubesToHandleRotation = new List<PolyCube>();
 
@@ -40,8 +40,7 @@ public class PolyCube
     private Dictionary<Transform, List<Transform>> TransToSubGraph_1 = new Dictionary<Transform, List<Transform>>();
     private Dictionary<Transform, List<Transform>> TransToSubGraph_2 = new Dictionary<Transform, List<Transform>>();
 
-    private Queue<Transform> HingesToRotateAround = new Queue<Transform>();
-    private Dictionary<Transform, int> HingeToRotationAmount = new Dictionary<Transform, int>();
+    private Queue<Transform> HingesToUnfoldAround = new Queue<Transform>();
 
     private float _CUBE_SCALE;
     private float _SPACING;
@@ -61,39 +60,42 @@ public class PolyCube
         CutHeads = new List<Transform>();
     }
 
-    public static bool HandleRotations(PolyCube P)
+    public static bool HandleRotations(PolyCube P, int MODE)
     {
-        Queue<Transform> InCompleteRotations = new Queue<Transform>();
-        while(P.HingesToRotateAround.Count > 0)
+        if(MODE == 0)
         {
-            Transform H = P.HingesToRotateAround.Dequeue();
-
-            H.Rotate(0.0f, 0.0f, ROTATION_SPEED);
-
-            Debug.Log("X:" + H.localEulerAngles.x);
-            Debug.Log("Y:" + H.localEulerAngles.y);
-            Debug.Log("Z:" + H.localEulerAngles.z);
-
-            if (H.localEulerAngles.z < MAX_HINGE_ROTATION)
+            //Unfold
+            Queue<Transform> InCompleteRotations = new Queue<Transform>();
+            while (P.HingesToUnfoldAround.Count > 0)
             {
-                Debug.Log("Not done");
-                InCompleteRotations.Enqueue(H);
+                Transform H = P.HingesToUnfoldAround.Dequeue();
+                if(P.EdgeGraph.GetRotation(H) < 90)
+                {
+                    P.EdgeGraph.IncrementRotation(H, (int)ROTATION_SPEED);
+                    H.Rotate(0.0f, 0.0f, ROTATION_SPEED);
+
+                    if (P.EdgeGraph.GetRotation(H) < MAX_HINGE_ROTATION)
+                    {
+                        InCompleteRotations.Enqueue(H);
+                    }
+                }
+            }
+
+            if (InCompleteRotations.Count == 0)
+            {
+                return false;
+            }
+            else
+            {
+                while (InCompleteRotations.Count > 0)
+                {
+                    P.HingesToUnfoldAround.Enqueue(InCompleteRotations.Dequeue());
+                }
+                return true;
             }
         }
 
-        if(InCompleteRotations.Count == 0)
-        {
-            return false;
-        }
-        else
-        {
-            while (InCompleteRotations.Count > 0)
-            {
-                P.HingesToRotateAround.Enqueue(InCompleteRotations.Dequeue());
-            }
-
-            return true;
-        }
+        return false;
     }
 
     public static PolyCube GetPolyCubeFromTransform(Transform T)
@@ -313,7 +315,6 @@ public class PolyCube
         if(Selected_Hinge != null)
         {
             Queue<Transform> All_The_Things = new Queue<Transform>();
-            Transform ParentHinge;
 
             List<Transform> Pair = EdgeGraph.GetHingePair(Selected_Hinge);
 
@@ -386,7 +387,7 @@ public class PolyCube
                 All_The_Things.Dequeue().parent = Parent_H;
             }
 
-            HingesToRotateAround.Enqueue(Parent_H);
+            HingesToUnfoldAround.Enqueue(Parent_H);
 
             if(!PolyCubesToHandleRotation.Contains(this))
             {

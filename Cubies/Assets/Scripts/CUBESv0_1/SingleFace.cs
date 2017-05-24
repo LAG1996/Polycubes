@@ -22,7 +22,7 @@ public class SingleFace {
         this.localPosition = localPosition;
         latticePosition = face.position;
         this.face = face;
-        body = face.FindChild("body");
+        body = face.Find("body");
     }
 
     public SingleFace(Vector3 localPosition, Transform face)
@@ -41,7 +41,7 @@ public class SingleFace {
             }
         }
 
-        body = face.FindChild("body");
+        body = face.Find("body");
     }
 
     public Vector3 GetLatticePosition()

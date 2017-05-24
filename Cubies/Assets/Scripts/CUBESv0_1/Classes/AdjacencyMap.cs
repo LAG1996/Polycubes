@@ -337,7 +337,7 @@ public class AdjacencyMap {
         public Node(Transform face)
         {
             this.face = face;
-            this.body = face.FindChild("body");
+            this.body = face.Find("body");
             Hinges = new List<Transform>();
 
             foreach(Transform H in face)

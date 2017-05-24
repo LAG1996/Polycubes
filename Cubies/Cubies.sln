@@ -1,7 +1,7 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{DD9AA56A-6D18-2E19-95F8-38B416047381}") = "Cubies", "Assembly-CSharp.csproj", "{F91BA9F5-69EA-03D9-CEF5-E8252929AD4F}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cubies", "Assembly-CSharp.csproj", "{F91BA9F5-69EA-03D9-CEF5-E8252929AD4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

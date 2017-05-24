@@ -654,6 +654,16 @@ public class HingeMap {
         return ParallelEdges;
     }
 
+    public void IncrementRotation(Transform H, int amt)
+    {
+        HingeToEdge[H].RotationAmt += amt;
+    }
+
+    public int GetRotation(Transform H)
+    {
+        return HingeToEdge[H].RotationAmt;
+    }
+
     public List<Transform> GetCutEdges()
     {
         List<Transform> hinges = new List<Transform>();
@@ -752,6 +762,7 @@ public class HingeMap {
 
     protected class EdgeNode
     {
+        public int RotationAmt;
         public Transform hinge_1;
         public Transform hinge_2;
         private Vector3 LatticePos;
@@ -776,6 +787,7 @@ public class HingeMap {
  
         public EdgeNode(Transform h1, Transform h2, Vector3 LP)
         {
+            RotationAmt = 0;
             hinge_1 = h1;
             hinge_2 = h2;
 

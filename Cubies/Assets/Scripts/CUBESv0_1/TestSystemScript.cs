@@ -188,7 +188,7 @@ public class TestSystemScript : MonoBehaviour {
         
         foreach(PolyCube P in PolyCube.PolyCubesToHandleRotation)
         {
-            if (PolyCube.HandleRotations(P))
+            if (PolyCube.HandleRotations(P, 0))
                 PolyCubeNotDone.Enqueue(P);
         }
 
