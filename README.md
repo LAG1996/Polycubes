@@ -10,7 +10,7 @@ I made this in the Unity engine, scripted in C#. The components of the cubes are
 
 Go to the file titled `Cubies` to see the bulk of this project's code. If you have some experience with the Unity engine, the project's organization should make sense.
 
-The directory titled `CUBIESv0_1` contains the code that goes into the main application (every thing else was mostly for testing purposes). The place to start to follow my code would be the file called `TestSystemScript.cs`.
+Under the `Assets` folder, directory titled `CUBIESv0_1` contains the code that goes into the main application (every thing else was mostly for testing purposes). The place to start to follow my code would be the file called `TestSystemScript.cs`.
 
 ## Can I Contribute?
 
