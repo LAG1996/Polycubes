@@ -18,4 +18,4 @@ Go for it! Unfortunately, I did not document my code as well as I should have. I
 
 ## This is a prototype
 
-As of June 2017, Cubies was ported to the browser-based environment, where it is currently being supported by myself and some research students. Check out the [repository](https://github.com/LAG1996/PolyCube_Port) or check out the [application](https://www.andrewwinslow.com/cubies) for yourself!
+As of June 2017, Cubies was ported to the browser-based environment, where it is currently being supported by myself and some research students. Check out the [repository](https://github.com/LAG1996/PolyCube_Port) or check out the [application](http://andrewwinslow.com/cubies/) for yourself!
