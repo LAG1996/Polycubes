@@ -14,7 +14,7 @@ Then go through `Assets > Scripts > CUBESv0_1` to find the code that goes into t
 
 ## Can I Contribute?
 
-Go for it! Unfortunately, I did not document my code as well as I should have. I hammered it out between my classes, after all. However, if there's an interest in getting Cubies working on the Unity engine, I will be happy to provide guidance. I would suggest just starting all over, however.
+Go for it! Unfortunately, I did not document my code as well as I should have. I hammered it out between my classes, after all. However, if there's an interest in getting Cubies working on the Unity engine, I will be happy to provide guidance.
 
 ## This is a prototype
 
