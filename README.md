@@ -6,6 +6,8 @@ Welcome to the repository for an early prototype of [Cubies](https://github.com/
 
 This project was meant to understand how to design the user experience in Cubies. How a user can 1) navigate 3D space using an orbital camera, 2) interact with a polycube, and 3) make sense of unfolding in a space where rotation kinda doesn't matter was not something we could have (or had the experience to) just imagine. Thus, we jumped into Unity to test it, since I already had experience with the engine.
 
+The result: the user can interact with a Dali Cross floating in 3D space. The controls are not nearly as intuitive as what's in Cubies, though, and I didn't design a UI to explain them, either. I was planning on fixing that, but then the decision was made to do it with Three.js.
+
 ## How was it made?
 
 I made this in the Unity engine, scripted in C#. The components of the cubes are simple meshes I made in Blender.
