@@ -1,6 +1,6 @@
 # Polycubes
 
-Welcome to the repository for an early prototype of [Cubies](https://github.com/LAG1996/PolyCube_Port). Since Cubies now lives in the browser enviornment, this project's pretty much dead. However, there's definitely room for growth if any one is interested.
+Welcome to the repository for an early prototype of [Cubies](https://github.com/LAG1996/PolyCube_Port). Since Cubies now lives in the browser enviornment, this project's pretty much dead. However, there's definitely ~~a lot of~~ room for growth if any one is interested.
 
 ## What did it do?
 
@@ -17,6 +17,8 @@ I made this in the Unity engine, scripted in C#. The components of the cubes are
 Go to the file titled `Cubies` to see the bulk of this project's code. If you have some experience with the Unity engine, the project's organization should make sense.
 
 Then go through `Assets > Scripts > CUBESv0_1` to find the code that goes into the main application (every thing else was mostly for testing purposes). The place to start to follow my code would be the file called `TestSystemScript.cs`.
+
+If you want to run the project, run `Cubies > RunPolycube.exe`. Check out the controls in `CONTROLS.md`.
 
 ## Can I Contribute?
 
