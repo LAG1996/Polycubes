@@ -46,7 +46,7 @@ public class TestSystemScript : MonoBehaviour {
     {
         Cuts = new List<Transform>();
         camcamScript = camcam.GetComponent<Control_Cam>();
-        camcamScript.allowMove = false;
+        camcamScript.allowMove = true;
         BuildPolyCube();
     }
 	

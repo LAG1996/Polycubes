@@ -1,38 +1,38 @@
-Mono path[0] = 'C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/PolyCubeFirstBuild_Data/Managed'
-Mono path[1] = 'C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/PolyCubeFirstBuild_Data/Mono'
-Mono config path = 'C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/PolyCubeFirstBuild_Data/Mono/etc'
-PlayerConnection initialized from C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/PolyCubeFirstBuild_Data (debug = 0)
-PlayerConnection initialized network socket : 0.0.0.0 55070
-Multi-casting "[IP] 129.113.132.45 [Port] 55070 [Flags] 2 [Guid] 1699442805 [EditorId] 3965593382 [Version] 1048832 [Id] WindowsPlayer(Udon) [Debug] 0" to [225.0.0.222:54997]...
-Started listening to [0.0.0.0:55070]
-PlayerConnection already initialized - listening to [0.0.0.0:55070]
+Mono path[0] = 'C:/Users/Lui Garc/Documents/My Projects/Cubies Prototype/Polycubes/Cubies/PolyCubeFirstBuild_Data/Managed'
+Mono path[1] = 'C:/Users/Lui Garc/Documents/My Projects/Cubies Prototype/Polycubes/Cubies/PolyCubeFirstBuild_Data/Mono'
+Mono config path = 'C:/Users/Lui Garc/Documents/My Projects/Cubies Prototype/Polycubes/Cubies/PolyCubeFirstBuild_Data/Mono/etc'
+PlayerConnection initialized from C:/Users/Lui Garc/Documents/My Projects/Cubies Prototype/Polycubes/Cubies/PolyCubeFirstBuild_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55263
+Multi-casting "[IP] 192.168.56.1 [Port] 55263 [Flags] 2 [Guid] 1623222182 [EditorId] 3965593382 [Version] 1048832 [Id] WindowsPlayer(DESKTOP-MS7STBL) [Debug] 0" to [225.0.0.222:54997]...
+Started listening to [0.0.0.0:55263]
+PlayerConnection already initialized - listening to [0.0.0.0:55263]
 Initialize engine version: 5.5.0f3 (38b4efef76f0)
 GfxDevice: creating device client; threaded=1
 Direct3D:
     Version:  Direct3D 11.0 [level 11.0]
-    Renderer: NVIDIA GeForce GTX 580 (ID=0x1080)
+    Renderer: NVIDIA GeForce GTX 1080 (ID=0x1b80)
     Vendor:   NVIDIA
-    VRAM:     1489 MB
-    Driver:   10.18.13.5560
+    VRAM:     8079 MB
+    Driver:   23.21.13.9135
 Begin MonoManager ReloadAssembly
-Platform assembly: C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.dll (this message is harmless)
-Loading C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.dll into Unity Child Domain
-Platform assembly: C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\Assembly-CSharp.dll (this message is harmless)
-Loading C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
-Platform assembly: C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.UI.dll (this message is harmless)
-Loading C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-Platform assembly: C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
-Loading C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-Platform assembly: C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
-Loading C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
-- Completed reload, in  0.074 seconds
-Platform assembly: C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\System.Core.dll (this message is harmless)
-Platform assembly: C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\System.dll (this message is harmless)
-desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
+Platform assembly: C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
+Loading C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
+- Completed reload, in  0.023 seconds
+Platform assembly: C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\Lui Garc\Documents\My Projects\Cubies Prototype\Polycubes\Cubies\PolyCubeFirstBuild_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 2.166918 ms
+UnloadTime: 0.964806 ms
 1
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
@@ -462,30 +462,8 @@ TestSystemScript:Start() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycu
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 108)
 
-Setting up 3 worker threads for Enlighten.
-  Thread -> id: 1ad0 -> priority: 1 
-  Thread -> id: 1e0c -> priority: 1 
-  Thread -> id: 119c -> priority: 1 
-VIEW_MODE
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:129)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/TestSystemScript.cs Line: 129)
-
-CUT_MODE
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:122)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/TestSystemScript.cs Line: 122)
-
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 3b14 -> priority: 1 
 VIEW_MODE
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
@@ -540,7 +518,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
 
-Y:0
+Y:90
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -588,7 +566,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
 
-Y:0
+Y:90
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -636,7 +614,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
 
-Y:0
+Y:90
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -684,7 +662,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
 
-Y:0
+Y:90
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -732,7 +710,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
 
-Y:0
+Y:90
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -780,7 +758,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
 
-Y:0
+Y:90
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -792,7 +770,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 74)
 
-Z:54
+Z:54.00001
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -828,7 +806,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
 
-Y:0
+Y:90
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -876,7 +854,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
 
-Y:0
+Y:90
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -924,7 +902,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
 
-Y:0
+Y:90
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -972,7 +950,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
 
-Y:0
+Y:90
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -995,46 +973,6 @@ TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cub
 TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 75)
-
-VIEW_MODE
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:129)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/TestSystemScript.cs Line: 129)
-
-CUT_MODE
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:122)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/TestSystemScript.cs Line: 122)
-
-CUT_MODE
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:122)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/TestSystemScript.cs Line: 122)
-
-UNFOLD_MODE
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:164)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/TestSystemScript.cs Line: 164)
 
 Rotate?
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
@@ -1060,7 +998,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
 
-Y:180
+Y:90
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -1072,439 +1010,7 @@ TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polyc
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 74)
 
-Z:9.000001
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:75)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 75)
-
-Not done
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:78)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 78)
-
-X:0
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:73)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
-
-Y:180
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:74)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 74)
-
-Z:18
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:75)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 75)
-
-Not done
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:78)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 78)
-
-X:0
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:73)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
-
-Y:180
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:74)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 74)
-
-Z:27
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:75)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 75)
-
-Not done
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:78)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 78)
-
-X:0
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:73)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
-
-Y:180
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:74)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 74)
-
-Z:36
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:75)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 75)
-
-Not done
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:78)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 78)
-
-X:0
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:73)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
-
-Y:180
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:74)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 74)
-
-Z:45
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:75)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 75)
-
-Not done
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:78)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 78)
-
-X:0
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:73)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
-
-Y:180
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:74)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 74)
-
-Z:54
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:75)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 75)
-
-Not done
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:78)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 78)
-
-X:0
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:73)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
-
-Y:180
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:74)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 74)
-
-Z:63.00001
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:75)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 75)
-
-Not done
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:78)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 78)
-
-X:0
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:73)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
-
-Y:180
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:74)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 74)
-
-Z:72.00001
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:75)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 75)
-
-Not done
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:78)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 78)
-
-X:0
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:73)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
-
-Y:180
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:74)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 74)
-
-Z:81.00001
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:75)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 75)
-
-Not done
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:78)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 78)
-
-X:0
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:73)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 73)
-
-Y:180
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-PolyCube:HandleRotations(PolyCube) (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\Classes\PolyCube.cs:74)
-TestSystemScript:_HandlePolyCubeRotation() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:191)
-TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:172)
-TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
- 
-(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/Classes/PolyCube.cs Line: 74)
-
-Z:90.00001
+Z:99.00001
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
@@ -1525,4 +1031,14 @@ TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cub
 TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
  
 (Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/TestSystemScript.cs Line: 122)
+
+VIEW_MODE
+UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
+UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
+UnityEngine.Logger:Log(LogType, Object)
+UnityEngine.Debug:Log(Object)
+TestSystemScript:_HandleKeyboard() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:129)
+TestSystemScript:Update() (at C:\Users\Luis Angel Garcia\MyProjects\Cubies\Polycubes\Cubies\Assets\Scripts\CUBESv0_1\TestSystemScript.cs:71)
+ 
+(Filename: C:/Users/Luis Angel Garcia/MyProjects/Cubies/Polycubes/Cubies/Assets/Scripts/CUBESv0_1/TestSystemScript.cs Line: 129)
 
