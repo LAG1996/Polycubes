@@ -2,6 +2,10 @@
 
 Welcome to the repository for an early prototype of [Cubies](https://github.com/LAG1996/PolyCube_Port). Since Cubies now lives in the browser enviornment, this project's pretty much dead. However, there's definitely room for growth if any one is interested.
 
+## What did it do?
+
+This project was meant to understand how to design the user experience in Cubies. How a user can 1) navigate 3D space using an orbital camera, 2) interact with a polycube, and 3) make sense of unfolding in a space where rotation kinda doesn't matter was not something we could have (or had the experience to) just imagine. Thus, we jumped into Unity to test it, since I already had experience with the engine.
+
 ## How was it made?
 
 I made this in the Unity engine, scripted in C#. The components of the cubes are simple meshes I made in Blender.
